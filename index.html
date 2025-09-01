@@ -219,6 +219,371 @@
                 left: 100%;
             }
         }
+
+        /* 层级完成时的视觉反馈动画 */
+        .layer-success {
+            animation: layer-success-flash 1.2s ease-out forwards;
+        }
+
+        @keyframes layer-success-flash {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+            }
+
+            20% {
+                transform: scale(1.1);
+                box-shadow: 0 0 30px rgba(16, 185, 129, 0.8), 0 0 60px rgba(34, 197, 94, 0.6);
+                border-color: #22c55e !important;
+            }
+
+            40% {
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(34, 197, 94, 1), 0 0 80px rgba(74, 222, 128, 0.8);
+            }
+
+            60% {
+                transform: scale(1.08);
+                box-shadow: 0 0 35px rgba(16, 185, 129, 0.9), 0 0 70px rgba(34, 197, 94, 0.7);
+            }
+
+            80% {
+                transform: scale(1.02);
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), 0 0 40px rgba(34, 197, 94, 0.4);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+                border-color: #10b981 !important;
+            }
+        }
+
+        /* 成功粒子效果 */
+        .success-particles {
+            position: absolute;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .success-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: particle-burst 1s ease-out forwards;
+        }
+
+        @keyframes particle-burst {
+            0% {
+                opacity: 1;
+                transform: scale(0) translate(0, 0);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.3) translate(var(--dx), var(--dy));
+            }
+        }
+
+        /* 层级解锁动画 */
+        .layer-unlock {
+            animation: layer-unlock-reveal 0.8s ease-out forwards;
+        }
+
+        @keyframes layer-unlock-reveal {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.8);
+                filter: blur(4px);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: translateY(-5px) scale(1.05);
+                filter: blur(2px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* 成功文字提示 */
+        .success-text {
+            position: absolute;
+            color: #22c55e;
+            font-weight: bold;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 25;
+            animation: success-text-float 2s ease-out forwards;
+            text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+
+        @keyframes success-text-float {
+            0% {
+                opacity: 0;
+                transform: translateY(10px) scale(0.8);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translateY(-10px) scale(1.1);
+            }
+
+            80% {
+                opacity: 1;
+                transform: translateY(-30px) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+        }
+
+        /* 倒水成功时的瓶子震动效果 */
+        .bottle-shake {
+            animation: bottle-shake 0.6s ease-in-out;
+        }
+
+        @keyframes bottle-shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            10% {
+                transform: translateX(-2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translateX(2px) rotate(1deg);
+            }
+
+            30% {
+                transform: translateX(-2px) rotate(-1deg);
+            }
+
+            40% {
+                transform: translateX(2px) rotate(1deg);
+            }
+
+            50% {
+                transform: translateX(-1px) rotate(-0.5deg);
+            }
+
+            60% {
+                transform: translateX(1px) rotate(0.5deg);
+            }
+
+            70% {
+                transform: translateX(-1px) rotate(-0.5deg);
+            }
+
+            80% {
+                transform: translateX(1px) rotate(0.5deg);
+            }
+
+            90% {
+                transform: translateX(0) rotate(0deg);
+            }
+        }
+
+        /* 屏幕震动效果 */
+        .screen-shake {
+            animation: screen-shake 0.5s ease-in-out;
+        }
+
+        @keyframes screen-shake {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            10% {
+                transform: translate(-1px, -1px);
+            }
+
+            20% {
+                transform: translate(1px, 1px);
+            }
+
+            30% {
+                transform: translate(-1px, 1px);
+            }
+
+            40% {
+                transform: translate(1px, -1px);
+            }
+
+            50% {
+                transform: translate(-1px, -1px);
+            }
+
+            60% {
+                transform: translate(1px, 1px);
+            }
+
+            70% {
+                transform: translate(-1px, 1px);
+            }
+
+            80% {
+                transform: translate(1px, -1px);
+            }
+
+            90% {
+                transform: translate(-1px, -1px);
+            }
+        }
+
+        /* 成功时的全屏闪光效果 */
+        .success-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 15;
+            animation: success-flash-fade 0.8s ease-out forwards;
+        }
+
+        @keyframes success-flash-fade {
+            0% {
+                opacity: 0;
+            }
+
+            30% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* 爆炸特效 */
+        .explosion-container {
+            position: absolute;
+            pointer-events: none;
+            z-index: 30;
+            width: 100%;
+            height: 100%;
+        }
+
+        .explosion-ring {
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid;
+            animation: explosion-expand 0.8s ease-out forwards;
+        }
+
+        @keyframes explosion-expand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                width: 120px;
+                height: 120px;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .explosion-spark {
+            position: absolute;
+            width: 4px;
+            height: 12px;
+            border-radius: 2px;
+            animation: spark-fly 1.2s ease-out forwards;
+        }
+
+        @keyframes spark-fly {
+            0% {
+                opacity: 1;
+                transform: scale(1) translate(0, 0) rotate(0deg);
+            }
+
+            20% {
+                opacity: 1;
+                transform: scale(1.2) translate(var(--spark-dx), var(--spark-dy)) rotate(var(--spark-rotation));
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.3) translate(calc(var(--spark-dx) * 2), calc(var(--spark-dy) * 2)) rotate(calc(var(--spark-rotation) + 180deg));
+            }
+        }
+
+        .explosion-wave {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(34, 197, 94, 0.4) 30%, transparent 70%);
+            animation: wave-expand 0.6s ease-out forwards;
+        }
+
+        @keyframes wave-expand {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            100% {
+                width: 100px;
+                height: 100px;
+                opacity: 0;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* 爆炸碎片效果 */
+        .explosion-fragment {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 1px;
+            animation: fragment-scatter 1.5s ease-out forwards;
+        }
+
+        @keyframes fragment-scatter {
+            0% {
+                opacity: 1;
+                transform: scale(1) translate(0, 0) rotate(0deg);
+            }
+
+            30% {
+                opacity: 1;
+                transform: scale(1.1) translate(var(--frag-dx), var(--frag-dy)) rotate(var(--frag-rotation));
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.2) translate(calc(var(--frag-dx) * 1.8), calc(var(--frag-dy) * 1.8 + 30px)) rotate(calc(var(--frag-rotation) + 360deg));
+            }
+        }
     </style>
 </head>
 
@@ -474,7 +839,7 @@
                                 </div>
 
                                 <!-- 第四层（顶层） -->
-                                <div id="layer-4" class="absolute w-full transition-all duration-300 opacity-30"
+                                <div id="layer-4" class="absolute w-full transition-all duration-300 hidden"
                                     style="bottom: 120px; height: 40px; background-color: #ef4444;">
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <div class="text-white text-base font-bold">4</div>
@@ -482,7 +847,7 @@
                                 </div>
 
                                 <!-- 第三层 -->
-                                <div id="layer-3" class="absolute w-full transition-all duration-300 opacity-30"
+                                <div id="layer-3" class="absolute w-full transition-all duration-300 hidden"
                                     style="bottom: 80px; height: 40px; background-color: #eab308;">
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <div class="text-white text-base font-bold">3</div>
@@ -490,7 +855,7 @@
                                 </div>
 
                                 <!-- 第二层 -->
-                                <div id="layer-2" class="absolute w-full transition-all duration-300 opacity-30"
+                                <div id="layer-2" class="absolute w-full transition-all duration-300 hidden"
                                     style="bottom: 40px; height: 40px; background-color: #3b82f6;">
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <div class="text-white text-base font-bold">2</div>
@@ -572,6 +937,8 @@
         let countdownProgress = 100;
         let colorChangeTime = 0;
         let currentColorDuration = 1200;
+        let comboCount = 0; // 连击计数
+        let lastSuccessTime = 0; // 上次成功时间
 
         const colors = ['red', 'yellow', 'blue'];
         const colorMap = {
@@ -655,6 +1022,10 @@
             updatePointsDisplay();
             gameState = 'playing';
 
+            // 重置连击计数
+            comboCount = 0;
+            lastSuccessTime = 0;
+
             // 隐藏等待界面，显示游戏界面
             elements.waitingOverlay.classList.add('hidden');
             elements.gameHint.classList.remove('hidden');
@@ -691,6 +1062,14 @@
             updateLayerDisplay();
             updateColorIndicator();
 
+            console.log('游戏开始:', {
+                playerColor,
+                currentLayer,
+                layerColors,
+                currentLayerColor,
+                targetColorForCurrentLayer: layerColors[currentLayer - 1]
+            });
+
             // 开始颜色变化循环
             startColorCycling();
             resetCountdown();
@@ -708,18 +1087,20 @@
 
                 if (index + 1 < currentLayer) {
                     // 已完成的层：显示为已填充状态
+                    layer.classList.remove('hidden');
                     layer.style.opacity = '1';
                     layer.style.backgroundColor = colorMap[layerColors[index]];
                     layer.classList.add('layer-completed');
                 } else if (index + 1 === currentLayer) {
-                    // 当前挑战层：高亮显示，颜色会变化
+                    // 当前挑战层：显示并高亮，颜色会变化
+                    layer.classList.remove('hidden');
                     layer.style.opacity = '1';
                     layer.style.backgroundColor = colorMap[currentLayerColor];
                     layer.classList.add('layer-active', 'water-ripple');
                 } else {
-                    // 未到达的层：半透明显示
-                    layer.style.opacity = '0.3';
-                    layer.style.backgroundColor = colorMap[layerColors[index]];
+                    // 未到达的层：隐藏
+                    layer.classList.add('hidden');
+                    layer.style.opacity = '0';
                 }
             });
 
@@ -749,6 +1130,14 @@
                 colorIndex = (colorIndex + 1) % colors.length;
                 currentLayerColor = colors[colorIndex];
 
+                console.log('颜色切换:', {
+                    currentLayerColor,
+                    playerColor,
+                    targetColor: layerColors[currentLayer - 1],
+                    isMatch: currentLayerColor === playerColor,
+                    shouldMatch: layerColors[currentLayer - 1] === playerColor
+                });
+
                 // 更新当前层的颜色显示
                 updateLayerDisplay();
                 updateColorIndicator();
@@ -761,8 +1150,16 @@
                 colorInterval = setTimeout(nextColor, currentColorDuration);
             }
 
-            // 立即开始第一次切换
-            nextColor();
+            // 首先更新UI显示当前颜色
+            updateLayerDisplay();
+            updateColorIndicator();
+
+            // 根据当前颜色设置显示时间
+            currentColorDuration = getCurrentColorDuration();
+            resetCountdown();
+
+            // 设置第一次切换的时间（不立即切换）
+            colorInterval = setTimeout(nextColor, currentColorDuration);
         }
 
         // 停止颜色循环
@@ -831,19 +1228,23 @@
         function handleScreenClick(event) {
             if (gameState !== 'playing' || isAnimating) return;
 
+            // 立即保存点击时的颜色状态，避免异步检查时颜色已经改变
+            const clickedLayerColor = currentLayerColor;
+            const clickedTargetColor = layerColors[currentLayer - 1];
+
             // 停止颜色循环
             stopColorCycling();
 
             // 显示倒水动画
             showPouringAnimation();
 
-            // 检查匹配结果
+            // 检查匹配结果（使用点击时保存的颜色状态）
             setTimeout(() => {
-                const isMatch = checkLayerMatch();
+                const isMatch = checkLayerMatchAtClick(clickedLayerColor, clickedTargetColor);
                 if (isMatch) {
                     handleLayerSuccess();
                 } else {
-                    handleFailure();
+                    handleFailure(clickedLayerColor, clickedTargetColor);
                 }
             }, 800);
         }
@@ -862,6 +1263,295 @@
             elements.pouringText.classList.add('hidden');
         }
 
+        // 显示层级成功效果
+        function showLayerSuccessEffect(layerNum) {
+            const layerElement = document.getElementById(`layer-${layerNum}`);
+            if (!layerElement) return;
+
+            // 更新连击计数
+            const currentTime = Date.now();
+            if (currentTime - lastSuccessTime < 3000) { // 3秒内算连击
+                comboCount++;
+            } else {
+                comboCount = 1;
+            }
+            lastSuccessTime = currentTime;
+
+            // 添加成功动画类
+            layerElement.classList.add('layer-success');
+
+            // 添加目标瓶震动效果
+            const targetBottle = elements.targetBottle;
+            targetBottle.classList.add('bottle-shake');
+
+            // 添加屏幕震动效果（连击时更强烈）
+            const gameArea = document.getElementById('app');
+            gameArea.classList.add('screen-shake');
+
+            // 创建全屏成功闪光效果
+            const flashEffect = document.createElement('div');
+            flashEffect.className = 'success-flash';
+            document.body.appendChild(flashEffect);
+
+            // 创建成功文字提示（包含连击信息）
+            const successText = document.createElement('div');
+            successText.className = 'success-text';
+            let message = `第${layerNum}层完成！✨`;
+            if (comboCount > 1) {
+                message += ` ${comboCount}连击！`;
+                successText.style.color = '#f59e0b'; // 连击时使用金色
+                successText.style.fontSize = '16px';
+            }
+            successText.textContent = message;
+            successText.style.left = '50%';
+            successText.style.top = '50%';
+            successText.style.transform = 'translate(-50%, -50%)';
+            layerElement.appendChild(successText);
+
+            // 创建爆炸特效
+            createExplosionEffect(layerElement, comboCount > 1);
+
+            // 创建粒子爆炸效果（连击时更多粒子）
+            createSuccessParticles(layerElement, comboCount > 1);
+
+            // 添加积分提示（连击时额外积分）
+            showPointsGain(layerNum, comboCount);
+
+            // 清理动画类和元素
+            setTimeout(() => {
+                layerElement.classList.remove('layer-success');
+                targetBottle.classList.remove('bottle-shake');
+                gameArea.classList.remove('screen-shake');
+                if (successText.parentNode) {
+                    successText.parentNode.removeChild(successText);
+                }
+                if (flashEffect.parentNode) {
+                    flashEffect.parentNode.removeChild(flashEffect);
+                }
+            }, 2000);
+        }
+
+        // 创建爆炸特效
+        function createExplosionEffect(layerElement, isCombo = false) {
+            const explosionContainer = document.createElement('div');
+            explosionContainer.className = 'explosion-container';
+            layerElement.appendChild(explosionContainer);
+
+            // 创建爆炸波纹（连击时创建多个波纹）
+            const waveCount = isCombo ? 3 : 1;
+            for (let w = 0; w < waveCount; w++) {
+                const wave = document.createElement('div');
+                wave.className = 'explosion-wave';
+                wave.style.left = '50%';
+                wave.style.top = '50%';
+                wave.style.animationDelay = `${w * 0.1}s`;
+                if (isCombo) {
+                    wave.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(251, 191, 36, 0.6) 30%, transparent 70%)';
+                    // 连击时波纹更大
+                    wave.style.transform = `translate(-50%, -50%) scale(${1 + w * 0.3})`;
+                }
+                explosionContainer.appendChild(wave);
+            }
+
+            // 创建爆炸环
+            const colors = isCombo ?
+                ['#f59e0b', '#fbbf24', '#f97316'] :
+                ['#22c55e', '#34d399', '#10b981'];
+
+            for (let i = 0; i < 3; i++) {
+                const ring = document.createElement('div');
+                ring.className = 'explosion-ring';
+                ring.style.left = '50%';
+                ring.style.top = '50%';
+                ring.style.borderColor = colors[i];
+                ring.style.animationDelay = `${i * 0.1}s`;
+                explosionContainer.appendChild(ring);
+            }
+
+            // 创建火花效果
+            const sparkCount = isCombo ? 16 : 12;
+            for (let i = 0; i < sparkCount; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'explosion-spark';
+
+                const angle = (i / sparkCount) * 2 * Math.PI;
+                const distance = 40 + Math.random() * 20;
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+                const rotation = Math.random() * 360;
+
+                spark.style.setProperty('--spark-dx', `${dx}px`);
+                spark.style.setProperty('--spark-dy', `${dy}px`);
+                spark.style.setProperty('--spark-rotation', `${rotation}deg`);
+                spark.style.left = '50%';
+                spark.style.top = '50%';
+                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.animationDelay = `${Math.random() * 0.2}s`;
+
+                explosionContainer.appendChild(spark);
+            }
+
+            // 创建爆炸碎片
+            const fragmentCount = isCombo ? 20 : 15;
+            for (let i = 0; i < fragmentCount; i++) {
+                const fragment = document.createElement('div');
+                fragment.className = 'explosion-fragment';
+
+                const angle = (i / fragmentCount) * 2 * Math.PI + Math.random() * 0.5;
+                const distance = 25 + Math.random() * 35;
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+                const rotation = Math.random() * 720;
+
+                fragment.style.setProperty('--frag-dx', `${dx}px`);
+                fragment.style.setProperty('--frag-dy', `${dy}px`);
+                fragment.style.setProperty('--frag-rotation', `${rotation}deg`);
+                fragment.style.left = '50%';
+                fragment.style.top = '50%';
+                fragment.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                fragment.style.animationDelay = `${Math.random() * 0.3}s`;
+
+                explosionContainer.appendChild(fragment);
+            }
+
+            // 清理爆炸容器
+            setTimeout(() => {
+                if (explosionContainer.parentNode) {
+                    explosionContainer.parentNode.removeChild(explosionContainer);
+                }
+            }, 1500);
+        }
+
+        // 创建成功粒子效果
+        function createSuccessParticles(layerElement, isCombo = false) {
+            const particleContainer = document.createElement('div');
+            particleContainer.className = 'success-particles';
+            layerElement.appendChild(particleContainer);
+
+            const colors = isCombo ?
+                ['#f59e0b', '#fbbf24', '#f97316', '#ea580c'] : // 连击时使用金色系
+                ['#22c55e', '#34d399', '#10b981', '#059669'];   // 普通时使用绿色系
+            const particleCount = isCombo ? 18 : 12; // 连击时更多粒子
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'success-particle';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                // 随机方向和距离
+                const angle = (i / particleCount) * 2 * Math.PI;
+                const distance = (isCombo ? 40 : 30) + Math.random() * 20;
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+
+                particle.style.setProperty('--dx', `${dx}px`);
+                particle.style.setProperty('--dy', `${dy}px`);
+                particle.style.left = '50%';
+                particle.style.top = '50%';
+                particle.style.transform = 'translate(-50%, -50%)';
+
+                // 连击时粒子更大
+                if (isCombo) {
+                    particle.style.width = '8px';
+                    particle.style.height = '8px';
+                }
+
+                particleContainer.appendChild(particle);
+            }
+
+            // 清理粒子容器
+            setTimeout(() => {
+                if (particleContainer.parentNode) {
+                    particleContainer.parentNode.removeChild(particleContainer);
+                }
+            }, 1000);
+        }
+
+        // 显示积分获得提示
+        function showPointsGain(layerNum, combo = 1) {
+            let pointsGain = layerNum * 5; // 每层基础积分
+
+            // 连击奖励
+            if (combo > 1) {
+                pointsGain += combo * 2; // 连击额外积分
+            }
+
+            const pointsText = document.createElement('div');
+            pointsText.className = 'success-text';
+            let message = `+${pointsGain} 积分`;
+            if (combo > 1) {
+                message += ` (连击奖励!)`;
+                pointsText.style.color = '#f59e0b';
+                pointsText.style.fontSize = '14px';
+            } else {
+                pointsText.style.color = '#10b981';
+                pointsText.style.fontSize = '12px';
+            }
+            pointsText.textContent = message;
+            pointsText.style.left = '80%';
+            pointsText.style.top = '20%';
+            pointsText.style.transform = 'translateX(-50%)';
+
+            const targetBottle = elements.targetBottle;
+            targetBottle.appendChild(pointsText);
+
+            // 实际增加积分
+            points += pointsGain;
+            updatePointsDisplay();
+
+            // 清理元素
+            setTimeout(() => {
+                if (pointsText.parentNode) {
+                    pointsText.parentNode.removeChild(pointsText);
+                }
+            }, 2000);
+        }
+
+        // 显示下一层解锁效果
+        function showNextLayerUnlock(layerNum) {
+            const layerElement = document.getElementById(`layer-${layerNum}`);
+            if (!layerElement) return;
+
+            // 添加解锁动画类
+            layerElement.classList.add('layer-unlock');
+
+            // 创建解锁文字提示
+            const unlockText = document.createElement('div');
+            unlockText.className = 'success-text';
+            unlockText.textContent = `第${layerNum}层解锁！🔓`;
+            unlockText.style.left = '50%';
+            unlockText.style.top = '-20px';
+            unlockText.style.transform = 'translateX(-50%)';
+            unlockText.style.color = '#3b82f6';
+            unlockText.style.textShadow = '0 0 10px rgba(59, 130, 246, 0.5)';
+            layerElement.appendChild(unlockText);
+
+            // 创建解锁光环效果
+            const glowRing = document.createElement('div');
+            glowRing.style.position = 'absolute';
+            glowRing.style.top = '-5px';
+            glowRing.style.left = '-5px';
+            glowRing.style.right = '-5px';
+            glowRing.style.bottom = '-5px';
+            glowRing.style.border = '2px solid #3b82f6';
+            glowRing.style.borderRadius = '8px';
+            glowRing.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.6)';
+            glowRing.style.animation = 'layer-pulse 0.8s ease-out';
+            glowRing.style.pointerEvents = 'none';
+            layerElement.appendChild(glowRing);
+
+            // 清理动画类和元素
+            setTimeout(() => {
+                layerElement.classList.remove('layer-unlock');
+                if (unlockText.parentNode) {
+                    unlockText.parentNode.removeChild(unlockText);
+                }
+                if (glowRing.parentNode) {
+                    glowRing.parentNode.removeChild(glowRing);
+                }
+            }, 2000);
+        }
+
         // 检查当前层匹配
         function checkLayerMatch() {
             // 核心匹配逻辑：
@@ -876,26 +1566,56 @@
             return currentMatch && targetMatch;
         }
 
+        // 检查点击时的层匹配（使用点击时保存的颜色状态）
+        function checkLayerMatchAtClick(clickedLayerColor, clickedTargetColor) {
+            // 核心匹配逻辑：
+            // 1. 点击时当前层显示的颜色必须与玩家颜色匹配
+            // 2. 当前层的目标颜色必须与玩家颜色一致
+
+            const currentMatch = clickedLayerColor === playerColor;
+            const targetMatch = clickedTargetColor === playerColor;
+
+            console.log('点击匹配检查:', {
+                clickedLayerColor,
+                clickedTargetColor,
+                playerColor,
+                currentMatch,
+                targetMatch,
+                result: currentMatch && targetMatch
+            });
+
+            // 只有当前显示的颜色与玩家颜色匹配，且当前层的目标颜色也与玩家颜色匹配时才成功
+            return currentMatch && targetMatch;
+        }
+
         // 处理层级成功
         function handleLayerSuccess() {
             // 隐藏倒水动画
             hidePouringAnimation();
 
+            // 添加当前层的成功视觉反馈
+            showLayerSuccessEffect(currentLayer);
+
             // 当前层成功，检查是否完成所有层
             if (currentLayer >= 4) {
                 // 四层全部完成，游戏胜利
-                handleGameSuccess();
+                setTimeout(() => {
+                    handleGameSuccess();
+                }, 1200); // 等待成功动画完成
             } else {
                 // 进入下一层
-                currentLayer++;
-                updateLayerDisplay();
-
-                // 短暂延迟后继续下一层的挑战
                 setTimeout(() => {
-                    isAnimating = false;
-                    startColorCycling();
-                    resetCountdown();
-                }, 1000);
+                    currentLayer++;
+                    showNextLayerUnlock(currentLayer);
+                    updateLayerDisplay();
+
+                    // 短暂延迟后继续下一层的挑战
+                    setTimeout(() => {
+                        isAnimating = false;
+                        startColorCycling();
+                        resetCountdown();
+                    }, 800); // 等待解锁动画
+                }, 1200); // 等待成功动画完成
             }
         }
 
@@ -923,7 +1643,7 @@
         }
 
         // 处理失败
-        function handleFailure() {
+        function handleFailure(clickedLayerColor = null, clickedTargetColor = null) {
             gameState = 'failed';
 
             // 隐藏倒水动画
@@ -932,15 +1652,30 @@
             // 显示失败界面
             elements.failedOverlay.classList.remove('hidden');
 
+            // 使用点击时的颜色状态，如果没有传入则使用当前状态
+            const targetColor = clickedTargetColor || layerColors[currentLayer - 1];
+            const displayColor = clickedLayerColor || currentLayerColor;
+
             // 更新失败信息
-            document.getElementById('target-color-failed').textContent = colorNames[layerColors[currentLayer - 1]] + '色';
-            document.getElementById('target-color-failed').style.color = colorMap[layerColors[currentLayer - 1]];
+            document.getElementById('target-color-failed').textContent = colorNames[targetColor] + '色';
+            document.getElementById('target-color-failed').style.color = colorMap[targetColor];
             document.getElementById('player-color-failed').textContent = colorNames[playerColor] + '色';
             document.getElementById('player-color-failed').style.color = colorMap[playerColor];
 
-            // 更新失败消息
+            // 更新失败消息 - 显示更详细的错误信息
             const failedMessage = document.getElementById('failed-message');
-            failedMessage.innerHTML = `第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[layerColors[currentLayer - 1]]}色</span>，你的瓶子是<span id="player-color-failed" class="font-bold">${colorNames[playerColor]}色</span>`;
+            if (displayColor !== playerColor && targetColor === playerColor) {
+                // 时机不对：目标层是正确颜色，但当前显示的不是
+                failedMessage.innerHTML = `时机不对！第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[targetColor]}色</span>时点击，但你在<span class="font-bold" style="color: ${colorMap[displayColor]}">${colorNames[displayColor]}色</span>时点击了`;
+            } else if (displayColor === playerColor && targetColor !== playerColor) {
+                // 层级错误：当前显示颜色匹配，但这一层不需要这个颜色
+                failedMessage.innerHTML = `层级错误！第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[targetColor]}色</span>，你的瓶子是<span id="player-color-failed" class="font-bold">${colorNames[playerColor]}色</span>`;
+            } else {
+                // 双重错误：时机和层级都不对
+                failedMessage.innerHTML = `第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[targetColor]}色</span>，你的瓶子是<span id="player-color-failed" class="font-bold">${colorNames[playerColor]}色</span>`;
+            }
+
+
         }
 
         // 生成奖励
@@ -1073,7 +1808,10 @@
             currentLayerColor = 'red';
             playerColor = 'red';
             layerColors = ['red', 'yellow', 'blue', 'red'];
+            comboCount = 0;
+            lastSuccessTime = 0;
             updatePlayerColor();
+            initializeLayerVisibility();
             updateLayerDisplay();
             updateColorIndicator();
 
@@ -1224,9 +1962,19 @@
         // 也可以点击游戏区域的任意位置触发
         elements.gameArea.addEventListener('click', handleScreenClick);
 
+        // 初始化页面时隐藏所有未开始的层
+        function initializeLayerVisibility() {
+            // 隐藏第2-4层，只显示第1层
+            elements.layer2.classList.add('hidden');
+            elements.layer3.classList.add('hidden');
+            elements.layer4.classList.add('hidden');
+            elements.layer1.classList.remove('hidden');
+        }
+
         // 初始化
         updatePointsDisplay();
         updatePlayerColor();
+        initializeLayerVisibility();
         updateLayerDisplay();
         updateColorIndicator();
     </script>
