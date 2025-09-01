@@ -584,6 +584,19 @@
                 transform: scale(0.2) translate(calc(var(--frag-dx) * 1.8), calc(var(--frag-dy) * 1.8 + 30px)) rotate(calc(var(--frag-rotation) + 360deg));
             }
         }
+
+        /* 淡出动画 */
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+        }
     </style>
 </head>
 
@@ -923,6 +936,7 @@
         let playerColor = 'red'; // 玩家瓶颜色（固定）
         let currentLayer = 1; // 当前挑战的层数 (1-4)
         let layerColors = ['red', 'yellow', 'blue', 'red']; // 四层的目标颜色
+        let completedLayerColors = []; // 记录每层成功时的颜色
         let currentLayerColor = 'red'; // 当前层的变化颜色
         let colorIndex = 0;
         let points = 1200;
@@ -1040,6 +1054,7 @@
             showConfetti = false;
             showGiftBox = false;
             currentLayer = 1;
+            completedLayerColors = []; // 重置已完成层的颜色记录
 
             // 随机设置玩家颜色（游戏开始时确定，整局不变）
             const randomPlayerColor = colors[Math.floor(Math.random() * colors.length)];
@@ -1054,6 +1069,7 @@
             ];
 
             // 重置颜色索引和当前层颜色
+            // 从第一个颜色开始正常循环
             colorIndex = 0;
             currentLayerColor = colors[0];
 
@@ -1067,7 +1083,8 @@
                 currentLayer,
                 layerColors,
                 currentLayerColor,
-                targetColorForCurrentLayer: layerColors[currentLayer - 1]
+                targetColorForCurrentLayer: layerColors[currentLayer - 1],
+                colorConsistencyCheck: currentLayerColor === layerColors[currentLayer - 1] ? '✅ 一致' : '❌ 不一致'
             });
 
             // 开始颜色变化循环
@@ -1086,10 +1103,11 @@
                 layer.classList.remove('layer-completed', 'layer-active', 'water-ripple');
 
                 if (index + 1 < currentLayer) {
-                    // 已完成的层：显示为已填充状态
+                    // 已完成的层：显示为已填充状态，使用成功时的颜色
                     layer.classList.remove('hidden');
                     layer.style.opacity = '1';
-                    layer.style.backgroundColor = colorMap[layerColors[index]];
+                    const completedColor = completedLayerColors[index] || playerColor;
+                    layer.style.backgroundColor = colorMap[completedColor];
                     layer.classList.add('layer-completed');
                 } else if (index + 1 === currentLayer) {
                     // 当前挑战层：显示并高亮，颜色会变化
@@ -1222,31 +1240,78 @@
             elements.hintColor.textContent = colorNames[playerColor] + '色';
         }
 
+        // 刷新玩家颜色（增加难度）
+        function refreshPlayerColor() {
+            // 随机选择一个新的颜色，确保与当前颜色不同
+            const availableColors = colors.filter(color => color !== playerColor);
+            const newColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+
+            playerColor = newColor;
+            updatePlayerColor();
+
+            // 更新倒水动画的颜色
+            elements.pouringLiquid.style.backgroundColor = colorMap[playerColor];
+
+            console.log(`玩家瓶子颜色已刷新为: ${playerColor}色`);
+
+            // 显示颜色变化提示
+            showColorChangeNotification();
+        }
+
+        // 显示颜色变化通知
+        function showColorChangeNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-xl z-50';
+            notification.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-6 h-6 rounded-full border-2 border-white" style="background-color: ${colorMap[playerColor]}"></div>
+                    <span>瓶子颜色变为${colorNames[playerColor]}色！</span>
+                    <div class="text-2xl">🎨</div>
+                </div>
+            `;
+
+            // 添加动画效果
+            notification.style.animation = 'bounce-scale 0.8s ease-out forwards';
+
+            document.body.appendChild(notification);
+
+            // 2秒后移除通知
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.5s ease-out forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            }, 2000);
+        }
+
 
 
         // 处理屏幕点击事件
         function handleScreenClick(event) {
             if (gameState !== 'playing' || isAnimating) return;
 
-            // 立即保存点击时的颜色状态，避免异步检查时颜色已经改变
+            // 立即保存点击时的颜色状态
             const clickedLayerColor = currentLayerColor;
             const clickedTargetColor = layerColors[currentLayer - 1];
 
             // 停止颜色循环
             stopColorCycling();
 
-            // 显示倒水动画
-            showPouringAnimation();
+            // 立即检查匹配结果
+            const isMatch = checkLayerMatchAtClick(clickedLayerColor, clickedTargetColor);
 
-            // 检查匹配结果（使用点击时保存的颜色状态）
-            setTimeout(() => {
-                const isMatch = checkLayerMatchAtClick(clickedLayerColor, clickedTargetColor);
-                if (isMatch) {
+            if (isMatch) {
+                // 显示倒水动画然后处理成功
+                showPouringAnimation();
+                setTimeout(() => {
                     handleLayerSuccess();
-                } else {
-                    handleFailure(clickedLayerColor, clickedTargetColor);
-                }
-            }, 800);
+                }, 800); // 给用户时间看到爆炸特效和倒水动画
+            } else {
+                // 立即处理失败，不显示倒水动画
+                handleFailure(clickedLayerColor, clickedTargetColor);
+            }
         }
 
         // 显示倒水动画
@@ -1569,29 +1634,34 @@
         // 检查点击时的层匹配（使用点击时保存的颜色状态）
         function checkLayerMatchAtClick(clickedLayerColor, clickedTargetColor) {
             // 核心匹配逻辑：
-            // 1. 点击时当前层显示的颜色必须与玩家颜色匹配
-            // 2. 当前层的目标颜色必须与玩家颜色一致
+            // 根据游戏规则，只需要点击时当前层显示的颜色与玩家颜色匹配即可
+            // 目标层的固定颜色不影响匹配判断
 
             const currentMatch = clickedLayerColor === playerColor;
-            const targetMatch = clickedTargetColor === playerColor;
 
             console.log('点击匹配检查:', {
                 clickedLayerColor,
                 clickedTargetColor,
                 playerColor,
                 currentMatch,
-                targetMatch,
-                result: currentMatch && targetMatch
+                result: currentMatch
             });
 
-            // 只有当前显示的颜色与玩家颜色匹配，且当前层的目标颜色也与玩家颜色匹配时才成功
-            return currentMatch && targetMatch;
+            // 只要当前显示的颜色与玩家颜色匹配就成功
+            return currentMatch;
         }
 
         // 处理层级成功
         function handleLayerSuccess() {
             // 隐藏倒水动画
             hidePouringAnimation();
+
+            // 记录当前层成功时的颜色（玩家颜色）
+            completedLayerColors[currentLayer - 1] = playerColor;
+
+            console.log(`第${currentLayer}层成功，固定为${playerColor}色`, {
+                completedLayerColors: [...completedLayerColors]
+            });
 
             // 添加当前层的成功视觉反馈
             showLayerSuccessEffect(currentLayer);
@@ -1601,7 +1671,7 @@
                 // 四层全部完成，游戏胜利
                 setTimeout(() => {
                     handleGameSuccess();
-                }, 1200); // 等待成功动画完成
+                }, 1500); // 给用户足够时间看到最终成功特效
             } else {
                 // 进入下一层
                 setTimeout(() => {
@@ -1611,11 +1681,18 @@
 
                     // 短暂延迟后继续下一层的挑战
                     setTimeout(() => {
+                        // 每次完成匹配后刷新玩家瓶子的颜色，增加难度
+                        refreshPlayerColor();
+
+                        // 重置颜色循环从第一个颜色开始
+                        colorIndex = 0;
+                        currentLayerColor = colors[0];
+
                         isAnimating = false;
                         startColorCycling();
                         resetCountdown();
-                    }, 800); // 等待解锁动画
-                }, 1200); // 等待成功动画完成
+                    }, 600); // 给用户时间看到解锁动画
+                }, 1500); // 给用户足够时间看到成功特效和积分提示
             }
         }
 
@@ -1656,23 +1733,25 @@
             const targetColor = clickedTargetColor || layerColors[currentLayer - 1];
             const displayColor = clickedLayerColor || currentLayerColor;
 
-            // 更新失败信息
-            document.getElementById('target-color-failed').textContent = colorNames[targetColor] + '色';
-            document.getElementById('target-color-failed').style.color = colorMap[targetColor];
-            document.getElementById('player-color-failed').textContent = colorNames[playerColor] + '色';
-            document.getElementById('player-color-failed').style.color = colorMap[playerColor];
-
-            // 更新失败消息 - 显示更详细的错误信息
+            // 获取失败消息元素
             const failedMessage = document.getElementById('failed-message');
-            if (displayColor !== playerColor && targetColor === playerColor) {
-                // 时机不对：目标层是正确颜色，但当前显示的不是
-                failedMessage.innerHTML = `时机不对！第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[targetColor]}色</span>时点击，但你在<span class="font-bold" style="color: ${colorMap[displayColor]}">${colorNames[displayColor]}色</span>时点击了`;
-            } else if (displayColor === playerColor && targetColor !== playerColor) {
-                // 层级错误：当前显示颜色匹配，但这一层不需要这个颜色
-                failedMessage.innerHTML = `层级错误！第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[targetColor]}色</span>，你的瓶子是<span id="player-color-failed" class="font-bold">${colorNames[playerColor]}色</span>`;
-            } else {
-                // 双重错误：时机和层级都不对
-                failedMessage.innerHTML = `第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[targetColor]}色</span>，你的瓶子是<span id="player-color-failed" class="font-bold">${colorNames[playerColor]}色</span>`;
+            const targetColorElement = document.getElementById('target-color-failed');
+            const playerColorElement = document.getElementById('player-color-failed');
+
+            // 更新失败信息（使用现有的span元素）
+            if (targetColorElement) {
+                targetColorElement.textContent = colorNames[targetColor] + '色';
+                targetColorElement.style.color = colorMap[targetColor];
+            }
+            if (playerColorElement) {
+                playerColorElement.textContent = colorNames[playerColor] + '色';
+                playerColorElement.style.color = colorMap[playerColor];
+            }
+
+            // 更新失败消息 - 根据新的匹配规则
+            if (failedMessage) {
+                // 现在只有一种失败情况：时机不对
+                failedMessage.innerHTML = `时机不对！需要等第${currentLayer}层变成<span class="font-bold" style="color: ${colorMap[playerColor]}">${colorNames[playerColor]}色</span>时点击，但你在<span class="font-bold" style="color: ${colorMap[displayColor]}">${colorNames[displayColor]}色</span>时点击了`;
             }
 
 
@@ -1803,11 +1882,13 @@
             elements.gameArea.style.cursor = 'default';
 
             // 重置游戏状态
-            colorIndex = 0;
             currentLayer = 1;
-            currentLayerColor = 'red';
             playerColor = 'red';
             layerColors = ['red', 'yellow', 'blue', 'red'];
+            completedLayerColors = []; // 重置已完成层的颜色记录
+            // 从第一个颜色开始正常循环
+            colorIndex = 0;
+            currentLayerColor = colors[0];
             comboCount = 0;
             lastSuccessTime = 0;
             updatePlayerColor();
