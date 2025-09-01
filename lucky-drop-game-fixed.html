@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸运一滴 - Lucky Drop Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes confettiFall {
+            0% {
+                opacity: 1;
+                transform: translateY(0) rotate(0deg) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(200px) rotate(360deg) scale(0.5);
+            }
+        }
+
+        @keyframes bounce-scale {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-50px);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1) translateY(0);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes gift-open {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fly-up {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.5);
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateY(-10px) scale(1.1);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1);
+            }
+        }
+
+        .animate-bounce-scale {
+            animation: bounce-scale 1s ease-out forwards;
+        }
+
+        .animate-gift-open {
+            animation: gift-open 0.8s ease-out forwards;
+        }
+
+        .animate-fly-up {
+            animation: fly-up 1s ease-out forwards;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 8px;
+            height: 20px;
+            opacity: 0.8;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .rotate-12 {
+            transform: rotate(12deg);
+        }
+
+        /* 瓶子亮灯效果 */
+        .bottle-lit {
+            opacity: 1 !important;
+            transform: scale(1.05);
+        }
+
+        .bottle-lit .bottle-container {
+            border-color: #fbbf24 !important;
+            border-width: 3px !important;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4) !important;
+            animation: bottle-glow 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bottle-glow {
+            0% {
+                box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 0 60px rgba(251, 191, 36, 0.6);
+            }
+        }
+
+        /* 倒水动画轨迹 */
+        .pour-trajectory {
+            position: absolute;
+            width: 3px;
+            background: linear-gradient(to bottom, transparent, currentColor);
+            border-radius: 2px;
+            opacity: 0.8;
+            animation: pour-flow 0.6s ease-out forwards;
+        }
+
+        @keyframes pour-flow {
+            0% {
+                height: 0;
+                opacity: 1;
+            }
+
+            100% {
+                height: 100%;
+                opacity: 0.6;
+            }
+        }
+
+        /* 层级效果 */
+        .layer-active {
+            border: 2px solid #fbbf24 !important;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+            animation: layer-pulse 1s ease-in-out infinite alternate;
+        }
+
+        .layer-completed {
+            border: 2px solid #10b981 !important;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+
+        @keyframes layer-pulse {
+            0% {
+                box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+            }
+
+            100% {
+                box-shadow: 0 0 25px rgba(251, 191, 36, 0.8);
+            }
+        }
+
+        /* 水层样式优化 */
+        #layer-1,
+        #layer-2,
+        #layer-3,
+        #layer-4 {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        #layer-1 {
+            border-bottom: none;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        /* 当前活跃层的特殊效果 */
+        .layer-active {
+            border: 2px solid #fbbf24 !important;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6) !important;
+            animation: layer-pulse 1s ease-in-out infinite alternate !important;
+            z-index: 10 !important;
+        }
+
+        .layer-completed {
+            border: 1px solid #10b981 !important;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4) !important;
+            z-index: 5 !important;
+        }
+
+        /* 水波纹效果 */
+        .water-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .water-ripple::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: water-flow 2s linear infinite;
+        }
+
+        @keyframes water-flow {
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div id="app" class="w-full max-w-md mx-auto bg-gray-100 min-h-screen relative overflow-hidden">
+        <!-- 彩带效果容器 -->
+        <div id="confetti-container" class="fixed inset-0 pointer-events-none z-30 overflow-hidden hidden"></div>
+
+        <!-- 礼盒动画容器 -->
+        <div id="gift-box-container"
+            class="fixed inset-0 flex items-center justify-center z-40 pointer-events-none hidden">
+            <div class="relative">
+                <!-- 礼盒关闭状态 -->
+                <div id="gift-box-closed" class="animate-bounce-scale">
+                    <div class="w-24 h-24 bg-gradient-to-br from-red-500 to-pink-500 rounded-lg shadow-xl relative">
+                        <div class="absolute top-10 left-0 right-0 h-4 bg-yellow-400"></div>
+                        <div class="absolute left-10 top-0 bottom-0 w-4 bg-yellow-400"></div>
+                        <div class="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                            <div class="w-8 h-5 bg-red-600 rounded-full relative">
+                                <div class="absolute -left-2 top-0.5 w-5 h-4 bg-red-600 rounded-full"></div>
+                                <div class="absolute -right-2 top-0.5 w-5 h-4 bg-red-600 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div
+                            class="absolute -inset-4 bg-gradient-to-r from-yellow-400/40 to-orange-400/40 rounded-full animate-ping">
+                        </div>
+                    </div>
+                    <div
+                        class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-white font-bold text-lg animate-pulse">
+                        点击开启！
+                    </div>
+                </div>
+
+                <!-- 礼盒开启状态 -->
+                <div id="gift-box-opened" class="hidden animate-gift-open">
+                    <div class="relative">
+                        <!-- 开启的礼盒 -->
+                        <div
+                            class="w-24 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-b-lg shadow-xl relative">
+                            <div class="absolute top-6 left-0 right-0 h-4 bg-yellow-400"></div>
+                            <div class="absolute left-10 top-0 bottom-0 w-4 bg-yellow-400"></div>
+                        </div>
+                        <!-- 开启的盖子 -->
+                        <div
+                            class="absolute -top-4 left-2 w-20 h-12 bg-gradient-to-br from-red-600 to-pink-600 rounded-t-lg transform -rotate-12 origin-bottom-left">
+                            <div class="absolute top-4 left-0 right-0 h-3 bg-yellow-400"></div>
+                            <div class="absolute left-8 top-0 bottom-0 w-3 bg-yellow-400"></div>
+                            <div class="absolute -top-2 left-1/2 transform -translate-x-1/2">
+                                <div class="w-6 h-4 bg-red-700 rounded-full relative">
+                                    <div class="absolute -left-1 top-0.5 w-4 h-3 bg-red-700 rounded-full"></div>
+                                    <div class="absolute -right-1 top-0.5 w-4 h-3 bg-red-700 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 奖励光芒效果 -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div
+                                class="w-32 h-32 bg-gradient-to-r from-yellow-300/60 to-orange-300/60 rounded-full animate-ping">
+                            </div>
+                            <div
+                                class="absolute w-24 h-24 bg-gradient-to-r from-yellow-400/80 to-orange-400/80 rounded-full animate-pulse">
+                            </div>
+                        </div>
+
+                        <!-- 飞出的奖励 -->
+                        <div id="flying-reward"
+                            class="absolute top-4 left-1/2 transform -translate-x-1/2 animate-fly-up">
+                            <div
+                                class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-xl shadow-lg border-2 border-yellow-300">
+                                +50 积分!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 顶部信息栏 -->
+        <div class="flex justify-between items-center p-4 bg-white shadow-sm border-b border-gray-200 relative z-10">
+            <h1 class="text-lg font-medium text-gray-800">幸运一滴</h1>
+            <div id="points-display" class="text-gray-600 font-medium">积分：1200</div>
+            <button class="p-1">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    class="text-gray-500">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <!-- 游戏状态覆盖层 - 等待开始 -->
+        <div id="waiting-overlay" class="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
+            <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl">
+                <h2 class="text-xl font-bold mb-4 text-gray-800">准备开始</h2>
+                <p class="text-gray-600 mb-6 text-sm">
+                    你的瓶子是<span id="player-color-text" class="font-bold"
+                        style="color: #ef4444">红色</span>，当目标瓶当前层变成相同颜色时点击屏幕倒水！需要完成四层挑战才能获胜。
+                </p>
+                <button id="start-btn"
+                    class="px-8 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg">
+                    开始挑战 (-10积分)
+                </button>
+            </div>
+        </div>
+
+        <!-- 失败状态 -->
+        <div id="failed-overlay" class="absolute inset-0 bg-red-900/50 flex items-center justify-center z-20 hidden">
+            <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl">
+                <div class="text-6xl mb-4">💥</div>
+                <h2 class="text-xl font-bold mb-2 text-red-600">时机不对！</h2>
+                <p id="failed-message" class="text-gray-600 mb-6 text-sm">
+                    目标是<span id="target-color-failed" class="font-bold">红色</span>，你倒的是<span id="player-color-failed"
+                        class="font-bold">红色</span>
+                </p>
+                <button id="retry-btn"
+                    class="px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg">
+                    再试一次
+                </button>
+            </div>
+        </div>
+
+        <!-- 奖励展示状态 -->
+        <div id="reward-overlay"
+            class="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 flex items-center justify-center z-20 hidden">
+            <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl relative overflow-hidden">
+                <!-- 庆祝特效 -->
+                <div class="absolute inset-0 pointer-events-none">
+                    <svg class="absolute top-4 left-4 text-yellow-400 animate-pulse" width="20" height="20"
+                        viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <svg class="absolute top-6 right-6 text-pink-400 animate-pulse" width="16" height="16"
+                        viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <svg class="absolute bottom-8 left-8 text-blue-400 animate-pulse" width="18" height="18"
+                        viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <svg class="absolute bottom-4 right-4 text-purple-400 animate-pulse" width="14" height="14"
+                        viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                </div>
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-xl font-bold mb-4 text-green-600">完美匹配！</h2>
+                <div id="reward-display"
+                    class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-gray-400 to-gray-600 text-white mb-6 shadow-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        class="text-yellow-500">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
+                    </svg>
+                    <span class="font-bold text-lg">积分 +50</span>
+                </div>
+
+                <!-- 分享按钮区域 -->
+                <div class="flex gap-3 mb-6">
+                    <button id="share-btn"
+                        class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                        </svg>
+                        分享成果
+                    </button>
+                    <button id="screenshot-btn"
+                        class="px-4 py-3 bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white rounded-xl font-bold transition-all shadow-lg">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                            <circle cx="12" cy="13" r="4" />
+                        </svg>
+                    </button>
+                </div>
+
+                <button id="continue-btn"
+                    class="w-full px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white rounded-xl font-bold transition-all shadow-lg">
+                    再次挑战 (-10积分)
+                </button>
+            </div>
+        </div>
+
+        <!-- 主游戏区域 -->
+        <div id="game-area" class="flex-1 p-8 pt-16 pb-24">
+            <!-- 游戏提示 -->
+            <div id="game-hint" class="text-center mb-8 hidden">
+                <div class="inline-block bg-blue-500 text-white px-4 py-2 rounded-full text-sm animate-pulse">
+                    等待第<span id="current-layer-hint">1</span>层变成<span id="hint-color" class="font-bold">红色</span>时点击屏幕！
+                </div>
+                <!-- 倒计时进度条 -->
+                <div class="mt-4 max-w-xs mx-auto">
+                    <div class="bg-gray-300 rounded-full h-2 overflow-hidden">
+                        <div id="countdown-bar"
+                            class="bg-gradient-to-r from-green-400 to-blue-500 h-full rounded-full transition-all duration-100"
+                            style="width: 100%;"></div>
+                    </div>
+                    <div class="text-xs text-gray-600 mt-1">颜色切换倒计时</div>
+                </div>
+            </div>
+
+            <!-- 游戏容器 -->
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 h-80">
+                <!-- 左侧：倾斜的玩家瓶 -->
+                <div class="relative">
+                    <div class="text-sm text-gray-500 mb-2 text-center">倾斜的玩家瓶</div>
+                    <div class="relative rotate-12">
+                        <div
+                            class="w-16 h-32 bg-white border-2 border-gray-300 rounded-lg relative overflow-hidden shadow-md">
+                            <div
+                                class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-8 h-4 bg-gray-200 border border-gray-300 rounded-t-lg">
+                            </div>
+                            <div id="player-bottle-liquid"
+                                class="absolute bottom-0 w-full h-24 rounded-b-lg transition-all duration-300"
+                                style="background-color: #ef4444;"></div>
+                            <div id="player-bottle-text"
+                                class="absolute bottom-6 left-2 right-2 text-xs text-white text-center font-medium">红水
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 倒水动画 -->
+                    <div id="pouring-animation" class="absolute top-8 right-0 transform translate-x-8 hidden">
+                        <div id="pouring-liquid" class="w-2 h-16 rounded-full opacity-80 animate-pulse"
+                            style="background-color: #ef4444;"></div>
+                    </div>
+                </div>
+
+                <!-- 箭头 -->
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl text-gray-400">→</div>
+                    <div id="pouring-text" class="text-xs text-gray-500 mt-1 animate-bounce hidden">倒入中...</div>
+                </div>
+
+                <!-- 右侧：单个四层目标瓶 -->
+                <div class="relative">
+                    <div class="text-sm text-gray-500 mb-2 text-center">目标瓶</div>
+                    <div class="flex justify-center">
+                        <div class="relative cursor-pointer" id="target-bottle">
+                            <div
+                                class="bottle-container w-20 h-48 bg-white border-2 rounded-lg relative overflow-hidden shadow-md transition-all duration-300 border-gray-300">
+                                <div
+                                    class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-10 h-5 bg-gray-200 border border-gray-300 rounded-t-lg">
+                                </div>
+
+                                <!-- 第四层（顶层） -->
+                                <div id="layer-4" class="absolute w-full transition-all duration-300 opacity-30"
+                                    style="bottom: 120px; height: 40px; background-color: #ef4444;">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-white text-base font-bold">4</div>
+                                    </div>
+                                </div>
+
+                                <!-- 第三层 -->
+                                <div id="layer-3" class="absolute w-full transition-all duration-300 opacity-30"
+                                    style="bottom: 80px; height: 40px; background-color: #eab308;">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-white text-base font-bold">3</div>
+                                    </div>
+                                </div>
+
+                                <!-- 第二层 -->
+                                <div id="layer-2" class="absolute w-full transition-all duration-300 opacity-30"
+                                    style="bottom: 40px; height: 40px; background-color: #3b82f6;">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-white text-base font-bold">2</div>
+                                    </div>
+                                </div>
+
+                                <!-- 第一层（底层） -->
+                                <div id="layer-1" class="absolute w-full transition-all duration-300"
+                                    style="bottom: 0px; height: 40px; background-color: #ef4444;">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="text-white text-base font-bold">1</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-xs text-center mt-2 text-gray-600">
+                                <div>进度: <span id="layer-progress">1/4</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 宝箱区域 -->
+            <div id="chest-area" class="flex justify-center mt-8">
+                <div class="flex flex-col items-center">
+                    <div id="chest-icon" class="transition-transform duration-300">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" class="text-gray-400">
+                            <polyline points="20,12 20,22 4,22 4,12" />
+                            <rect x="2" y="7" width="20" height="5" />
+                            <line x1="12" y1="22" x2="12" y2="7" />
+                            <path d="m5,7 0,-2c0,-1.1 0.9,-2 2,-2h10c1.1,0 2,0.9 2,2v2" />
+                        </svg>
+                        <div class="text-xs text-gray-500 mt-2">[宝箱]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部提示 -->
+        <div id="click-hint" class="absolute bottom-8 left-0 right-0 text-center hidden">
+            <div class="bg-black/70 text-white px-6 py-3 rounded-full mx-8">
+                <div class="text-sm">点击屏幕倒水到目标瓶</div>
+            </div>
+        </div>
+
+        <!-- 颜色变化指示器 -->
+        <div id="color-indicator" class="absolute top-24 right-4 flex flex-col gap-1 hidden">
+            <div class="text-xs text-gray-500 mb-1">颜色循环</div>
+            <div id="color-red"
+                class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-125 border-white shadow-lg"
+                style="background-color: #ef4444;"></div>
+            <div id="color-yellow"
+                class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60"
+                style="background-color: #eab308;"></div>
+            <div id="color-blue"
+                class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60"
+                style="background-color: #3b82f6;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态和变量
+        let gameState = 'waiting'; // waiting, playing, success, failed, reward
+        let playerColor = 'red'; // 玩家瓶颜色（固定）
+        let currentLayer = 1; // 当前挑战的层数 (1-4)
+        let layerColors = ['red', 'yellow', 'blue', 'red']; // 四层的目标颜色
+        let currentLayerColor = 'red'; // 当前层的变化颜色
+        let colorIndex = 0;
+        let points = 1200;
+        let reward = null;
+        let isAnimating = false;
+        let showChest = false;
+        let chestOpened = false;
+        let showConfetti = false;
+        let showGiftBox = false;
+        let colorInterval = null;
+        let countdownInterval = null;
+        let countdownProgress = 100;
+        let colorChangeTime = 0;
+        let currentColorDuration = 1200;
+
+        const colors = ['red', 'yellow', 'blue'];
+        const colorMap = {
+            red: '#ef4444',
+            yellow: '#eab308',
+            blue: '#3b82f6'
+        };
+        const colorNames = {
+            red: '红',
+            yellow: '黄',
+            blue: '蓝'
+        };
+
+        const rewards = [
+            { type: 'points', amount: 1, name: '积分 +1', rarity: 'common' },
+            { type: 'points', amount: 10, name: '积分 +10', rarity: 'common' },
+            { type: 'points', amount: 18, name: '积分 +18', rarity: 'rare' },
+            { type: 'points', amount: 38, name: '积分 +38', rarity: 'rare' },
+            { type: 'points', amount: 88, name: '积分 +88', rarity: 'epic' },
+            { type: 'points', amount: 188, name: '积分 +188', rarity: 'epic' },
+            { type: 'points', amount: 388, name: '积分 +388', rarity: 'legendary' }
+        ];
+
+        // DOM 元素
+        const elements = {
+            pointsDisplay: document.getElementById('points-display'),
+            waitingOverlay: document.getElementById('waiting-overlay'),
+            failedOverlay: document.getElementById('failed-overlay'),
+            rewardOverlay: document.getElementById('reward-overlay'),
+            gameArea: document.getElementById('game-area'),
+            gameHint: document.getElementById('game-hint'),
+            clickHint: document.getElementById('click-hint'),
+            colorIndicator: document.getElementById('color-indicator'),
+            startBtn: document.getElementById('start-btn'),
+            retryBtn: document.getElementById('retry-btn'),
+            continueBtn: document.getElementById('continue-btn'),
+            shareBtn: document.getElementById('share-btn'),
+            screenshotBtn: document.getElementById('screenshot-btn'),
+            playerColorText: document.getElementById('player-color-text'),
+            hintColor: document.getElementById('hint-color'),
+            playerBottleLiquid: document.getElementById('player-bottle-liquid'),
+            playerBottleText: document.getElementById('player-bottle-text'),
+            targetBottle: document.getElementById('target-bottle'),
+            layer1: document.getElementById('layer-1'),
+            layer2: document.getElementById('layer-2'),
+            layer3: document.getElementById('layer-3'),
+            layer4: document.getElementById('layer-4'),
+            layerProgress: document.getElementById('layer-progress'),
+            pouringAnimation: document.getElementById('pouring-animation'),
+            pouringLiquid: document.getElementById('pouring-liquid'),
+            pouringText: document.getElementById('pouring-text'),
+            confettiContainer: document.getElementById('confetti-container'),
+            giftBoxContainer: document.getElementById('gift-box-container'),
+            giftRewardText: document.getElementById('gift-reward-text'),
+            rewardDisplay: document.getElementById('reward-display'),
+            countdownBar: document.getElementById('countdown-bar')
+        };
+
+        // 更新积分显示
+        function updatePointsDisplay() {
+            elements.pointsDisplay.textContent = `积分：${points}`;
+        }
+
+        // 更新颜色指示器
+        function updateColorIndicator() {
+            colors.forEach((color, index) => {
+                const element = document.getElementById(`color-${color}`);
+                if (index === colorIndex) {
+                    element.className = 'w-4 h-4 rounded-full border-2 transition-all duration-200 scale-125 border-white shadow-lg';
+                } else {
+                    element.className = 'w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60';
+                }
+            });
+        }
+
+        // 开始游戏
+        function startGame() {
+            if (points < 10) return;
+
+            points -= 10;
+            updatePointsDisplay();
+            gameState = 'playing';
+
+            // 隐藏等待界面，显示游戏界面
+            elements.waitingOverlay.classList.add('hidden');
+            elements.gameHint.classList.remove('hidden');
+            elements.clickHint.classList.remove('hidden');
+            elements.colorIndicator.classList.remove('hidden');
+
+            // 重置游戏状态
+            reward = null;
+            isAnimating = false;
+            showChest = false;
+            chestOpened = false;
+            showConfetti = false;
+            showGiftBox = false;
+            currentLayer = 1;
+
+            // 随机设置玩家颜色（游戏开始时确定，整局不变）
+            const randomPlayerColor = colors[Math.floor(Math.random() * colors.length)];
+            playerColor = randomPlayerColor;
+
+            // 随机生成四层的目标颜色
+            layerColors = [
+                colors[Math.floor(Math.random() * colors.length)],
+                colors[Math.floor(Math.random() * colors.length)],
+                colors[Math.floor(Math.random() * colors.length)],
+                colors[Math.floor(Math.random() * colors.length)]
+            ];
+
+            // 重置颜色索引和当前层颜色
+            colorIndex = 0;
+            currentLayerColor = colors[0];
+
+            // 更新UI
+            updatePlayerColor();
+            updateLayerDisplay();
+            updateColorIndicator();
+
+            // 开始颜色变化循环
+            startColorCycling();
+            resetCountdown();
+
+            // 设置点击事件
+            elements.gameArea.style.cursor = 'pointer';
+        }
+
+        // 更新层级显示
+        function updateLayerDisplay() {
+            // 重置所有层的样式
+            [elements.layer1, elements.layer2, elements.layer3, elements.layer4].forEach((layer, index) => {
+                // 清除所有样式类
+                layer.classList.remove('layer-completed', 'layer-active', 'water-ripple');
+
+                if (index + 1 < currentLayer) {
+                    // 已完成的层：显示为已填充状态
+                    layer.style.opacity = '1';
+                    layer.style.backgroundColor = colorMap[layerColors[index]];
+                    layer.classList.add('layer-completed');
+                } else if (index + 1 === currentLayer) {
+                    // 当前挑战层：高亮显示，颜色会变化
+                    layer.style.opacity = '1';
+                    layer.style.backgroundColor = colorMap[currentLayerColor];
+                    layer.classList.add('layer-active', 'water-ripple');
+                } else {
+                    // 未到达的层：半透明显示
+                    layer.style.opacity = '0.3';
+                    layer.style.backgroundColor = colorMap[layerColors[index]];
+                }
+            });
+
+            // 更新进度显示
+            elements.layerProgress.textContent = `${currentLayer}/4`;
+
+            // 更新提示中的当前层数
+            const layerHint = document.getElementById('current-layer-hint');
+            if (layerHint) {
+                layerHint.textContent = currentLayer;
+            }
+        }
+
+        // 获取当前颜色应该显示的时间
+        function getCurrentColorDuration() {
+            // 如果当前颜色与玩家颜色匹配，显示更长时间
+            if (currentLayerColor === playerColor) {
+                return 1000; // 匹配颜色显示1秒
+            } else {
+                return 500;  // 非匹配颜色显示0.5秒
+            }
+        }
+
+        // 开始颜色循环
+        function startColorCycling() {
+            function nextColor() {
+                colorIndex = (colorIndex + 1) % colors.length;
+                currentLayerColor = colors[colorIndex];
+
+                // 更新当前层的颜色显示
+                updateLayerDisplay();
+                updateColorIndicator();
+
+                // 根据是否匹配设置不同的显示时间
+                currentColorDuration = getCurrentColorDuration();
+                resetCountdown();
+
+                // 设置下一次切换的时间
+                colorInterval = setTimeout(nextColor, currentColorDuration);
+            }
+
+            // 立即开始第一次切换
+            nextColor();
+        }
+
+        // 停止颜色循环
+        function stopColorCycling() {
+            if (colorInterval) {
+                clearTimeout(colorInterval);
+                colorInterval = null;
+            }
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+        }
+
+        // 重置倒计时
+        function resetCountdown() {
+            countdownProgress = 100;
+            colorChangeTime = Date.now();
+
+            // 清除之前的倒计时
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            // 开始新的倒计时
+            countdownInterval = setInterval(() => {
+                const elapsed = Date.now() - colorChangeTime;
+                const progress = Math.max(0, 100 - (elapsed / currentColorDuration) * 100);
+                countdownProgress = progress;
+                updateCountdownBar();
+
+                if (progress <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 50);
+        }
+
+        // 更新倒计时进度条
+        function updateCountdownBar() {
+            if (elements.countdownBar) {
+                elements.countdownBar.style.width = countdownProgress + '%';
+
+                // 根据进度改变颜色
+                if (countdownProgress > 60) {
+                    elements.countdownBar.className = 'bg-gradient-to-r from-green-400 to-blue-500 h-full rounded-full transition-all duration-100';
+                } else if (countdownProgress > 30) {
+                    elements.countdownBar.className = 'bg-gradient-to-r from-yellow-400 to-orange-500 h-full rounded-full transition-all duration-100';
+                } else {
+                    elements.countdownBar.className = 'bg-gradient-to-r from-red-400 to-pink-500 h-full rounded-full transition-all duration-100';
+                }
+            }
+        }
+
+        // 更新玩家颜色
+        function updatePlayerColor() {
+            elements.playerBottleLiquid.style.backgroundColor = colorMap[playerColor];
+            elements.playerBottleText.textContent = colorNames[playerColor] + '水';
+            elements.playerColorText.textContent = colorNames[playerColor] + '色';
+            elements.playerColorText.style.color = colorMap[playerColor];
+            elements.hintColor.textContent = colorNames[playerColor] + '色';
+        }
+
+
+
+        // 处理屏幕点击事件
+        function handleScreenClick(event) {
+            if (gameState !== 'playing' || isAnimating) return;
+
+            // 停止颜色循环
+            stopColorCycling();
+
+            // 显示倒水动画
+            showPouringAnimation();
+
+            // 检查匹配结果
+            setTimeout(() => {
+                const isMatch = checkLayerMatch();
+                if (isMatch) {
+                    handleLayerSuccess();
+                } else {
+                    handleFailure();
+                }
+            }, 800);
+        }
+
+        // 显示倒水动画
+        function showPouringAnimation() {
+            isAnimating = true;
+            elements.pouringAnimation.classList.remove('hidden');
+            elements.pouringText.classList.remove('hidden');
+            elements.pouringLiquid.style.backgroundColor = colorMap[playerColor];
+        }
+
+        // 隐藏倒水动画
+        function hidePouringAnimation() {
+            elements.pouringAnimation.classList.add('hidden');
+            elements.pouringText.classList.add('hidden');
+        }
+
+        // 检查当前层匹配
+        function checkLayerMatch() {
+            // 核心匹配逻辑：
+            // 1. 当前层的颜色必须与玩家颜色匹配
+            // 2. 当前层的目标颜色必须与玩家颜色一致
+            // 3. 必须在正确的时机点击
+
+            const currentMatch = currentLayerColor === playerColor;
+            const targetMatch = layerColors[currentLayer - 1] === playerColor;
+
+            // 只有当前显示的颜色与玩家颜色匹配，且当前层的目标颜色也与玩家颜色匹配时才成功
+            return currentMatch && targetMatch;
+        }
+
+        // 处理层级成功
+        function handleLayerSuccess() {
+            // 隐藏倒水动画
+            hidePouringAnimation();
+
+            // 当前层成功，检查是否完成所有层
+            if (currentLayer >= 4) {
+                // 四层全部完成，游戏胜利
+                handleGameSuccess();
+            } else {
+                // 进入下一层
+                currentLayer++;
+                updateLayerDisplay();
+
+                // 短暂延迟后继续下一层的挑战
+                setTimeout(() => {
+                    isAnimating = false;
+                    startColorCycling();
+                    resetCountdown();
+                }, 1000);
+            }
+        }
+
+        // 处理游戏完全成功（四层全部完成）
+        function handleGameSuccess() {
+            gameState = 'success';
+
+            // 生成奖励
+            reward = generateReward();
+            points += reward.amount;
+            updatePointsDisplay();
+
+            // 显示彩带效果
+            showConfettiEffect();
+
+            // 延迟显示礼盒动画
+            setTimeout(() => {
+                showGiftBoxAnimation();
+            }, 500);
+
+            // 点击礼盒开启
+            setTimeout(() => {
+                elements.giftBoxContainer.addEventListener('click', openGiftBox, { once: true });
+            }, 1000);
+        }
+
+        // 处理失败
+        function handleFailure() {
+            gameState = 'failed';
+
+            // 隐藏倒水动画
+            hidePouringAnimation();
+
+            // 显示失败界面
+            elements.failedOverlay.classList.remove('hidden');
+
+            // 更新失败信息
+            document.getElementById('target-color-failed').textContent = colorNames[layerColors[currentLayer - 1]] + '色';
+            document.getElementById('target-color-failed').style.color = colorMap[layerColors[currentLayer - 1]];
+            document.getElementById('player-color-failed').textContent = colorNames[playerColor] + '色';
+            document.getElementById('player-color-failed').style.color = colorMap[playerColor];
+
+            // 更新失败消息
+            const failedMessage = document.getElementById('failed-message');
+            failedMessage.innerHTML = `第${currentLayer}层需要<span id="target-color-failed" class="font-bold">${colorNames[layerColors[currentLayer - 1]]}色</span>，你的瓶子是<span id="player-color-failed" class="font-bold">${colorNames[playerColor]}色</span>`;
+        }
+
+        // 生成奖励
+        function generateReward() {
+            const rand = Math.random();
+            if (rand < 0.35) return rewards[0]; // 35% - 1 积分
+            if (rand < 0.60) return rewards[1]; // 25% - 10 积分
+            if (rand < 0.75) return rewards[2]; // 15% - 18 积分
+            if (rand < 0.85) return rewards[3]; // 10% - 38 积分
+            if (rand < 0.93) return rewards[4]; // 8% - 88 积分
+            if (rand < 0.98) return rewards[5]; // 5% - 188 积分
+            return rewards[6]; // 2% - 388 积分
+        }
+
+        // 显示彩带效果
+        function showConfettiEffect() {
+            elements.confettiContainer.classList.remove('hidden');
+
+            // 创建彩带片段
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)] === 'red' ? '#ef4444' :
+                    colors[Math.floor(Math.random() * colors.length)] === 'yellow' ? '#eab308' : '#3b82f6';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animation = 'confettiFall 3s linear forwards';
+                elements.confettiContainer.appendChild(confetti);
+            }
+
+            // 3秒后清理彩带
+            setTimeout(() => {
+                elements.confettiContainer.innerHTML = '';
+                elements.confettiContainer.classList.add('hidden');
+            }, 3000);
+        }
+
+        // 显示礼盒动画
+        function showGiftBoxAnimation() {
+            elements.giftBoxContainer.classList.remove('hidden');
+            // 移除pointer-events-none以允许点击
+            elements.giftBoxContainer.classList.remove('pointer-events-none');
+            // 显示关闭的礼盒
+            document.getElementById('gift-box-closed').classList.remove('hidden');
+            document.getElementById('gift-box-opened').classList.add('hidden');
+        }
+
+        // 开启礼盒
+        function openGiftBox() {
+            if (reward) {
+                const rewardText = `+${reward.amount} 积分!`;
+                document.getElementById('flying-reward').querySelector('div').textContent = rewardText;
+
+                // 切换到开启状态
+                document.getElementById('gift-box-closed').classList.add('hidden');
+                document.getElementById('gift-box-opened').classList.remove('hidden');
+
+                // 2秒后隐藏礼盒，显示奖励界面
+                setTimeout(() => {
+                    hideGiftBoxAnimation();
+                    showRewardOverlay();
+                }, 2000);
+            }
+        }
+
+        // 隐藏礼盒动画
+        function hideGiftBoxAnimation() {
+            elements.giftBoxContainer.classList.add('hidden');
+            // 恢复pointer-events-none
+            elements.giftBoxContainer.classList.add('pointer-events-none');
+            // 重置礼盒状态
+            document.getElementById('gift-box-closed').classList.remove('hidden');
+            document.getElementById('gift-box-opened').classList.add('hidden');
+        }
+
+        // 显示奖励界面
+        function showRewardOverlay() {
+            gameState = 'reward';
+
+            // 更新奖励显示
+            const rewardElement = elements.rewardDisplay.querySelector('span');
+            rewardElement.textContent = reward.name;
+
+            // 根据奖励稀有度设置颜色
+            const rewardContainer = elements.rewardDisplay;
+            switch (reward.rarity) {
+                case 'common':
+                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-gray-400 to-gray-600 text-white mb-6 shadow-lg';
+                    break;
+                case 'rare':
+                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-blue-400 to-blue-600 text-white mb-6 shadow-lg';
+                    break;
+                case 'epic':
+                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-purple-400 to-purple-600 text-white mb-6 shadow-lg';
+                    break;
+                case 'legendary':
+                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white mb-6 shadow-lg';
+                    break;
+            }
+
+            elements.rewardOverlay.classList.remove('hidden');
+        }
+
+        // 重置游戏
+        function resetGame() {
+            gameState = 'waiting';
+            isAnimating = false;
+            showChest = false;
+            chestOpened = false;
+            reward = null;
+            showConfetti = false;
+            showGiftBox = false;
+
+            stopColorCycling();
+
+            // 隐藏所有覆盖层
+            elements.failedOverlay.classList.add('hidden');
+            elements.rewardOverlay.classList.add('hidden');
+            elements.gameHint.classList.add('hidden');
+            elements.clickHint.classList.add('hidden');
+            elements.colorIndicator.classList.add('hidden');
+
+            // 显示等待界面
+            elements.waitingOverlay.classList.remove('hidden');
+            elements.gameArea.style.cursor = 'default';
+
+            // 重置游戏状态
+            colorIndex = 0;
+            currentLayer = 1;
+            currentLayerColor = 'red';
+            playerColor = 'red';
+            layerColors = ['red', 'yellow', 'blue', 'red'];
+            updatePlayerColor();
+            updateLayerDisplay();
+            updateColorIndicator();
+
+            // 更新开始按钮状态
+            if (points >= 10) {
+                elements.startBtn.disabled = false;
+                elements.startBtn.className = 'px-8 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg';
+                elements.startBtn.textContent = '开始挑战 (-10积分)';
+            } else {
+                elements.startBtn.disabled = true;
+                elements.startBtn.className = 'px-8 py-3 rounded-xl font-bold transition-all bg-gray-300 text-gray-500 cursor-not-allowed';
+                elements.startBtn.textContent = '积分不足';
+            }
+        }
+
+        // 再次挑战（直接开始新游戏）
+        function startNewChallenge() {
+            if (points < 10) {
+                showToast('积分不足，无法开始挑战！');
+                return;
+            }
+
+            // 隐藏奖励界面
+            elements.rewardOverlay.classList.add('hidden');
+
+            // 直接开始新游戏
+            startGame();
+        }
+
+        // 分享功能
+        function shareResult() {
+            const shareText = `🎉 我在幸运一滴游戏中获得了 ${reward.name}！当前积分：${points} 分！快来挑战吧！`;
+            const shareUrl = window.location.href;
+
+            // 创建分享选项弹窗
+            const shareModal = document.createElement('div');
+            shareModal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+            shareModal.innerHTML = `
+                <div class="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full">
+                    <h3 class="text-lg font-bold mb-4 text-center">分享到</h3>
+                    <div class="space-y-3">
+                        <button onclick="shareToWeChat()" class="w-full flex items-center gap-3 p-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M8.5 12.5c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5 1.5.7 1.5 1.5zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5 1.5.7 1.5 1.5z"/>
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-4-4h3V9h2v4h3l-4 4z"/>
+                            </svg>
+                            微信好友
+                        </button>
+                        <button onclick="shareToWeibo()" class="w-full flex items-center gap-3 p-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                            </svg>
+                            微博
+                        </button>
+                        <button onclick="shareToQQ()" class="w-full flex items-center gap-3 p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                            </svg>
+                            QQ空间
+                        </button>
+                        <button onclick="copyShareText()" class="w-full flex items-center gap-3 p-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            复制文本
+                        </button>
+                    </div>
+                    <button onclick="closeShareModal()" class="w-full mt-4 p-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl transition-all">
+                        取消
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(shareModal);
+
+            // 分享函数
+            window.shareToWeChat = function () {
+                // 微信分享逻辑（实际项目中需要接入微信SDK）
+                showToast('请在微信中打开此页面进行分享');
+                closeShareModal();
+            };
+
+            window.shareToWeibo = function () {
+                const weiboUrl = `https://service.weibo.com/share/share.php?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+                window.open(weiboUrl, '_blank');
+                closeShareModal();
+            };
+
+            window.shareToQQ = function () {
+                const qqUrl = `https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
+                window.open(qqUrl, '_blank');
+                closeShareModal();
+            };
+
+            window.copyShareText = function () {
+                navigator.clipboard.writeText(shareText + ' ' + shareUrl).then(() => {
+                    showToast('分享文本已复制到剪贴板！');
+                }).catch(() => {
+                    showToast('复制失败，请手动复制');
+                });
+                closeShareModal();
+            };
+
+            window.closeShareModal = function () {
+                document.body.removeChild(shareModal);
+                delete window.shareToWeChat;
+                delete window.shareToWeibo;
+                delete window.shareToQQ;
+                delete window.copyShareText;
+                delete window.closeShareModal;
+            };
+        }
+
+        // 截图功能
+        function takeScreenshot() {
+            // 使用 html2canvas 库进行截图（需要引入库）
+            // 这里提供一个简化版本的提示
+            showToast('截图功能需要额外的库支持，请在实际项目中引入 html2canvas');
+        }
+
+        // 显示提示消息
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black/80 text-white px-6 py-3 rounded-full z-50 transition-opacity';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 2000);
+        }
+
+        // 事件监听器
+        elements.startBtn.addEventListener('click', startGame);
+        elements.retryBtn.addEventListener('click', resetGame);
+        elements.continueBtn.addEventListener('click', startNewChallenge);
+        elements.shareBtn.addEventListener('click', shareResult);
+        elements.screenshotBtn.addEventListener('click', takeScreenshot);
+
+        // 为目标瓶添加点击事件监听器（点击屏幕触发倒水）
+        elements.targetBottle.addEventListener('click', handleScreenClick);
+        // 也可以点击游戏区域的任意位置触发
+        elements.gameArea.addEventListener('click', handleScreenClick);
+
+        // 初始化
+        updatePointsDisplay();
+        updatePlayerColor();
+        updateLayerDisplay();
+        updateColorIndicator();
+    </script>
+</body>
+
+</html>
