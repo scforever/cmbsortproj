@@ -166,9 +166,7 @@
 
         /* 水层样式优化 */
         #layer-1,
-        #layer-2,
-        #layer-3,
-        #layer-4 {
+        #layer-2 {
             border-top: 1px solid rgba(255, 255, 255, 0.2);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
@@ -177,6 +175,11 @@
             border-bottom: none;
             border-bottom-left-radius: 6px;
             border-bottom-right-radius: 6px;
+        }
+
+        #layer-2 {
+            border-top-left-radius: 6px;
+            border-top-right-radius: 6px;
         }
 
         /* 当前活跃层的特殊效果 */
@@ -597,6 +600,75 @@
                 transform: translate(-50%, -50%) scale(0.8);
             }
         }
+
+        /* 玩家瓶子消失动画 */
+        @keyframes bottle-disappear {
+            0% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8) translateY(-10px);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-30px);
+            }
+        }
+
+        /* 玩家瓶子出现动画 */
+        @keyframes bottle-appear {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(30px);
+            }
+
+            30% {
+                opacity: 0.5;
+                transform: scale(0.9) translateY(10px);
+            }
+
+            70% {
+                opacity: 0.8;
+                transform: scale(1.1) translateY(-5px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* 新瓶子闪光效果 */
+        @keyframes bottle-shine {
+            0% {
+                box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4);
+            }
+
+            100% {
+                box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        /* 动画类 */
+        .bottle-disappearing {
+            animation: bottle-disappear 0.8s ease-in forwards !important;
+        }
+
+        .bottle-appearing {
+            animation: bottle-appear 1.2s ease-out forwards !important;
+        }
+
+        .bottle-shining {
+            animation: bottle-shine 1.5s ease-in-out !important;
+        }
     </style>
 </head>
 
@@ -694,7 +766,7 @@
                 <h2 class="text-xl font-bold mb-4 text-gray-800">准备开始</h2>
                 <p class="text-gray-600 mb-6 text-sm">
                     你的瓶子是<span id="player-color-text" class="font-bold"
-                        style="color: #ef4444">红色</span>，当目标瓶当前层变成相同颜色时点击屏幕倒水！需要完成四层挑战才能获胜。
+                        style="color: #ef4444">红色</span>，当目标瓶当前层变成相同颜色时点击屏幕倒水！需要完成两层挑战才能获胜。
                 </p>
                 <button id="start-btn"
                     class="px-8 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg">
@@ -813,7 +885,7 @@
                 <!-- 左侧：倾斜的玩家瓶 -->
                 <div class="relative">
                     <div class="text-sm text-gray-500 mb-2 text-center">倾斜的玩家瓶</div>
-                    <div class="relative rotate-12">
+                    <div id="player-bottle-container" class="relative rotate-12">
                         <div
                             class="w-16 h-32 bg-white border-2 border-gray-300 rounded-lg relative overflow-hidden shadow-md">
                             <div
@@ -851,23 +923,7 @@
                                     class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-10 h-5 bg-gray-200 border border-gray-300 rounded-t-lg">
                                 </div>
 
-                                <!-- 第四层（顶层） -->
-                                <div id="layer-4" class="absolute w-full transition-all duration-300 hidden"
-                                    style="bottom: 120px; height: 40px; background-color: #ef4444;">
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <div class="text-white text-base font-bold">4</div>
-                                    </div>
-                                </div>
-
-                                <!-- 第三层 -->
-                                <div id="layer-3" class="absolute w-full transition-all duration-300 hidden"
-                                    style="bottom: 80px; height: 40px; background-color: #eab308;">
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <div class="text-white text-base font-bold">3</div>
-                                    </div>
-                                </div>
-
-                                <!-- 第二层 -->
+                                <!-- 第二层（顶层） -->
                                 <div id="layer-2" class="absolute w-full transition-all duration-300 hidden"
                                     style="bottom: 40px; height: 40px; background-color: #3b82f6;">
                                     <div class="absolute inset-0 flex items-center justify-center">
@@ -884,7 +940,7 @@
                                 </div>
                             </div>
                             <div class="text-xs text-center mt-2 text-gray-600">
-                                <div>进度: <span id="layer-progress">1/4</span></div>
+                                <div>进度: <span id="layer-progress">1/2</span></div>
                             </div>
                         </div>
                     </div>
@@ -915,6 +971,8 @@
             </div>
         </div>
 
+
+
         <!-- 颜色变化指示器 -->
         <div id="color-indicator" class="absolute top-24 right-4 flex flex-col gap-1 hidden">
             <div class="text-xs text-gray-500 mb-1">颜色循环</div>
@@ -934,8 +992,8 @@
         // 游戏状态和变量
         let gameState = 'waiting'; // waiting, playing, success, failed, reward
         let playerColor = 'red'; // 玩家瓶颜色（固定）
-        let currentLayer = 1; // 当前挑战的层数 (1-4)
-        let layerColors = ['red', 'yellow', 'blue', 'red']; // 四层的目标颜色
+        let currentLayer = 1; // 当前挑战的层数 (1-2)
+        let layerColors = ['red', 'yellow']; // 两层的目标颜色
         let completedLayerColors = []; // 记录每层成功时的颜色
         let currentLayerColor = 'red'; // 当前层的变化颜色
         let colorIndex = 0;
@@ -995,11 +1053,11 @@
             hintColor: document.getElementById('hint-color'),
             playerBottleLiquid: document.getElementById('player-bottle-liquid'),
             playerBottleText: document.getElementById('player-bottle-text'),
+            playerBottleContainer: document.getElementById('player-bottle-container'),
             targetBottle: document.getElementById('target-bottle'),
             layer1: document.getElementById('layer-1'),
             layer2: document.getElementById('layer-2'),
-            layer3: document.getElementById('layer-3'),
-            layer4: document.getElementById('layer-4'),
+
             layerProgress: document.getElementById('layer-progress'),
             pouringAnimation: document.getElementById('pouring-animation'),
             pouringLiquid: document.getElementById('pouring-liquid'),
@@ -1060,10 +1118,8 @@
             const randomPlayerColor = colors[Math.floor(Math.random() * colors.length)];
             playerColor = randomPlayerColor;
 
-            // 随机生成四层的目标颜色
+            // 随机生成两层的目标颜色
             layerColors = [
-                colors[Math.floor(Math.random() * colors.length)],
-                colors[Math.floor(Math.random() * colors.length)],
                 colors[Math.floor(Math.random() * colors.length)],
                 colors[Math.floor(Math.random() * colors.length)]
             ];
@@ -1098,7 +1154,7 @@
         // 更新层级显示
         function updateLayerDisplay() {
             // 重置所有层的样式
-            [elements.layer1, elements.layer2, elements.layer3, elements.layer4].forEach((layer, index) => {
+            [elements.layer1, elements.layer2].forEach((layer, index) => {
                 // 清除所有样式类
                 layer.classList.remove('layer-completed', 'layer-active', 'water-ripple');
 
@@ -1123,7 +1179,7 @@
             });
 
             // 更新进度显示
-            elements.layerProgress.textContent = `${currentLayer}/4`;
+            elements.layerProgress.textContent = `${currentLayer}/2`;
 
             // 更新提示中的当前层数
             const layerHint = document.getElementById('current-layer-hint');
@@ -1241,52 +1297,141 @@
         }
 
         // 刷新玩家颜色（增加难度）
-        function refreshPlayerColor() {
-            // 随机选择一个新的颜色，确保与当前颜色不同
-            const availableColors = colors.filter(color => color !== playerColor);
-            const newColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+        async function refreshPlayerColor() {
+            console.log('=== 开始刷新玩家瓶子颜色 ===');
 
-            playerColor = newColor;
-            updatePlayerColor();
+            try {
+                // 1. 先让旧瓶子消失
+                console.log('步骤1: 隐藏旧瓶子');
+                await hidePlayerBottle();
 
-            // 更新倒水动画的颜色
-            elements.pouringLiquid.style.backgroundColor = colorMap[playerColor];
+                // 2. 随机选择一个新的颜色，确保与当前颜色不同
+                console.log('步骤2: 选择新颜色');
+                const availableColors = colors.filter(color => color !== playerColor);
+                const newColor = availableColors[Math.floor(Math.random() * availableColors.length)];
 
-            console.log(`玩家瓶子颜色已刷新为: ${playerColor}色`);
+                console.log(`旧颜色: ${playerColor}, 新颜色: ${newColor}`);
 
-            // 显示颜色变化提示
-            showColorChangeNotification();
+                playerColor = newColor;
+                updatePlayerColor();
+
+                // 更新倒水动画的颜色
+                elements.pouringLiquid.style.backgroundColor = colorMap[playerColor];
+
+                // 3. 短暂延迟后显示新瓶子
+                console.log('步骤3: 准备显示新瓶子');
+                setTimeout(async () => {
+                    console.log('步骤4: 显示新瓶子');
+                    await showPlayerBottle();
+
+                    // 4. 显示新瓶子提示
+                    console.log('步骤5: 显示通知');
+                    showNewBottleNotification();
+
+
+                }, 200);
+
+            } catch (error) {
+                console.error('刷新瓶子颜色时出错:', error);
+            }
         }
 
-        // 显示颜色变化通知
-        function showColorChangeNotification() {
+
+
+        // 玩家瓶子消失动画
+        function hidePlayerBottle() {
+            return new Promise((resolve) => {
+                const container = elements.playerBottleContainer;
+                console.log('开始隐藏瓶子，容器元素:', container);
+                console.log('容器当前类名:', container ? container.className : 'null');
+
+                if (!container) {
+                    console.error('找不到玩家瓶子容器元素！');
+                    resolve();
+                    return;
+                }
+
+                // 强制触发重排，确保动画能被应用
+                container.offsetHeight;
+
+                container.classList.add('bottle-disappearing');
+                console.log('添加了消失动画类，新类名:', container.className);
+
+                // 动画完成后移除类并resolve
+                setTimeout(() => {
+                    container.classList.remove('bottle-disappearing');
+                    container.style.opacity = '0';
+                    console.log('瓶子消失动画完成，最终类名:', container.className);
+                    resolve();
+                }, 800); // 与CSS动画时间一致
+            });
+        }
+
+        // 玩家瓶子出现动画
+        function showPlayerBottle() {
+            return new Promise((resolve) => {
+                const container = elements.playerBottleContainer;
+                console.log('开始显示瓶子，容器元素:', container);
+
+                if (!container) {
+                    console.error('找不到玩家瓶子容器元素！');
+                    resolve();
+                    return;
+                }
+
+                const bottleElement = container.querySelector('.w-16.h-32');
+                console.log('瓶子元素:', bottleElement);
+
+                // 重置透明度并添加出现动画
+                container.style.opacity = '1';
+                container.classList.add('bottle-appearing');
+                console.log('添加了出现动画类');
+
+                // 添加闪光效果
+                if (bottleElement) {
+                    bottleElement.classList.add('bottle-shining');
+                    console.log('添加了闪光效果');
+                }
+
+                // 动画完成后清理类
+                setTimeout(() => {
+                    container.classList.remove('bottle-appearing');
+                    if (bottleElement) {
+                        bottleElement.classList.remove('bottle-shining');
+                    }
+                    console.log('瓶子出现动画完成');
+                    resolve();
+                }, 1200); // 与CSS动画时间一致
+            });
+        }
+
+        // 显示新瓶子提示
+        function showNewBottleNotification() {
             const notification = document.createElement('div');
-            notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-xl z-50';
+            notification.className = 'fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-3 rounded-xl font-bold shadow-xl z-50';
             notification.innerHTML = `
                 <div class="flex items-center gap-3">
-                    <div class="w-6 h-6 rounded-full border-2 border-white" style="background-color: ${colorMap[playerColor]}"></div>
-                    <span>瓶子颜色变为${colorNames[playerColor]}色！</span>
-                    <div class="text-2xl">🎨</div>
+                    <div class="text-2xl">🆕</div>
+                    <span>新瓶子准备就绪！</span>
+                    <div class="text-2xl">✨</div>
                 </div>
             `;
 
             // 添加动画效果
-            notification.style.animation = 'bounce-scale 0.8s ease-out forwards';
+            notification.style.animation = 'bounce-scale 0.6s ease-out forwards';
 
             document.body.appendChild(notification);
 
-            // 2秒后移除通知
+            // 1.5秒后移除通知
             setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.5s ease-out forwards';
+                notification.style.animation = 'fadeOut 0.4s ease-out forwards';
                 setTimeout(() => {
                     if (notification.parentNode) {
                         notification.parentNode.removeChild(notification);
                     }
-                }, 500);
-            }, 2000);
+                }, 400);
+            }, 1500);
         }
-
-
 
         // 处理屏幕点击事件
         function handleScreenClick(event) {
@@ -1667,8 +1812,8 @@
             showLayerSuccessEffect(currentLayer);
 
             // 当前层成功，检查是否完成所有层
-            if (currentLayer >= 4) {
-                // 四层全部完成，游戏胜利
+            if (currentLayer >= 2) {
+                // 两层全部完成，游戏胜利
                 setTimeout(() => {
                     handleGameSuccess();
                 }, 1500); // 给用户足够时间看到最终成功特效
@@ -1680,17 +1825,20 @@
                     updateLayerDisplay();
 
                     // 短暂延迟后继续下一层的挑战
-                    setTimeout(() => {
+                    setTimeout(async () => {
                         // 每次完成匹配后刷新玩家瓶子的颜色，增加难度
-                        refreshPlayerColor();
+                        await refreshPlayerColor();
 
-                        // 重置颜色循环从第一个颜色开始
-                        colorIndex = 0;
-                        currentLayerColor = colors[0];
+                        // 等待瓶子动画完成后再继续游戏
+                        setTimeout(() => {
+                            // 重置颜色循环从第一个颜色开始
+                            colorIndex = 0;
+                            currentLayerColor = colors[0];
 
-                        isAnimating = false;
-                        startColorCycling();
-                        resetCountdown();
+                            isAnimating = false;
+                            startColorCycling();
+                            resetCountdown();
+                        }, 800); // 给瓶子动画足够时间完成
                     }, 600); // 给用户时间看到解锁动画
                 }, 1500); // 给用户足够时间看到成功特效和积分提示
             }
@@ -1884,7 +2032,7 @@
             // 重置游戏状态
             currentLayer = 1;
             playerColor = 'red';
-            layerColors = ['red', 'yellow', 'blue', 'red'];
+            layerColors = ['red', 'yellow'];
             completedLayerColors = []; // 重置已完成层的颜色记录
             // 从第一个颜色开始正常循环
             colorIndex = 0;
@@ -2048,7 +2196,7 @@
             // 隐藏第2-4层，只显示第1层
             elements.layer2.classList.add('hidden');
             elements.layer3.classList.add('hidden');
-            elements.layer4.classList.add('hidden');
+
             elements.layer1.classList.remove('hidden');
         }
 
@@ -2058,6 +2206,17 @@
         initializeLayerVisibility();
         updateLayerDisplay();
         updateColorIndicator();
+
+        // 测试按钮事件
+        document.getElementById('test-hide').addEventListener('click', async () => {
+            console.log('测试隐藏按钮被点击');
+            await hidePlayerBottle();
+        });
+
+        document.getElementById('test-show').addEventListener('click', async () => {
+            console.log('测试显示按钮被点击');
+            await showPlayerBottle();
+        });
     </script>
 </body>
 
