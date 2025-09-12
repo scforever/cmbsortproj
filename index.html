@@ -73,7 +73,7 @@
         @keyframes fly-up {
             0% {
                 opacity: 0;
-                transform: translateY(20px) scale(0.5);
+                transform: translateY(0px) scale(0.3);
             }
 
             50% {
@@ -84,6 +84,92 @@
             100% {
                 opacity: 1;
                 transform: translateY(-20px) scale(1);
+            }
+        }
+
+        /* 层级脉冲动画 */
+        @keyframes layer-pulse {
+            0% { 
+                box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+            }
+            100% { 
+                box-shadow: 0 0 25px rgba(251, 191, 36, 0.8);
+            }
+        }
+
+        /* 水波纹效果 */
+        @keyframes water-flow {
+            0% { left: -100%; opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { left: 100%; opacity: 0.8; }
+        }
+
+        /* 冒泡动画 */
+        @keyframes bubble-up {
+            0% { 
+                opacity: 0; 
+                transform: translateX(-50%) translateY(10px) scale(0.8); 
+            }
+            50% { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(-5px) scale(1.05); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateX(-50%) translateY(0px) scale(1); 
+            }
+        }
+
+        /* 玩家瓶移动到目标位置动画 */
+        @keyframes bottle-move-to-target {
+            0% { 
+                transform: rotate(12deg) translateX(0) translateY(0); 
+            }
+            100% { 
+                transform: rotate(12deg) translateX(min(120px, 30vw)) translateY(-20px); 
+            }
+        }
+
+        /* 玩家瓶倒水动画（倾斜更多） */
+        @keyframes bottle-pour {
+            0% { 
+                transform: rotate(12deg) translateX(min(120px, 30vw)) translateY(-20px); 
+            }
+            100% { 
+                transform: rotate(45deg) translateX(min(120px, 30vw)) translateY(-20px); 
+            }
+        }
+
+        /* 玩家瓶回到初始位置动画 */
+        @keyframes bottle-return {
+            0% { 
+                transform: rotate(45deg) translateX(min(120px, 30vw)) translateY(-20px); 
+            }
+            50% { 
+                transform: rotate(12deg) translateX(min(120px, 30vw)) translateY(-20px); 
+            }
+            100% { 
+                transform: rotate(12deg) translateX(0) translateY(0); 
+            }
+        }
+
+        /* 倒水液体流动动画 */
+        @keyframes liquid-pour {
+            0% { 
+                opacity: 0; 
+                transform: translateY(0) scaleY(0); 
+            }
+            20% { 
+                opacity: 1; 
+                transform: translateY(0) scaleY(0.3); 
+            }
+            80% { 
+                opacity: 1; 
+                transform: translateY(0) scaleY(1); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(10px) scaleY(1); 
             }
         }
 
@@ -102,592 +188,23 @@
         .confetti-piece {
             position: absolute;
             width: 8px;
-            height: 20px;
-            opacity: 0.8;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .rotate-12 {
-            transform: rotate(12deg);
-        }
-
-        /* 瓶子亮灯效果 */
-        .bottle-lit {
-            opacity: 1 !important;
-            transform: scale(1.05);
-        }
-
-        .bottle-lit .bottle-container {
-            border-color: #fbbf24 !important;
-            border-width: 3px !important;
-            box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4) !important;
-            animation: bottle-glow 1s ease-in-out infinite alternate;
-        }
-
-        @keyframes bottle-glow {
-            0% {
-                box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4);
-            }
-
-            100% {
-                box-shadow: 0 0 30px rgba(251, 191, 36, 0.8), 0 0 60px rgba(251, 191, 36, 0.6);
-            }
-        }
-
-        /* 倒水动画轨迹 */
-        .pour-trajectory {
-            position: absolute;
-            width: 3px;
-            background: linear-gradient(to bottom, transparent, currentColor);
+            height: 8px;
             border-radius: 2px;
-            opacity: 0.8;
-            animation: pour-flow 0.6s ease-out forwards;
-        }
-
-        @keyframes pour-flow {
-            0% {
-                height: 0;
-                opacity: 1;
-            }
-
-            100% {
-                height: 100%;
-                opacity: 0.6;
-            }
-        }
-
-        /* 层级效果 */
-        .layer-active {
-            border: 2px solid #fbbf24 !important;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
-            animation: layer-pulse 1s ease-in-out infinite alternate;
-        }
-
-        .layer-completed {
-            border: 2px solid #10b981 !important;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
-        }
-
-        @keyframes layer-pulse {
-            0% {
-                box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
-            }
-
-            100% {
-                box-shadow: 0 0 25px rgba(251, 191, 36, 0.8);
-            }
-        }
-
-        /* 水层样式优化 */
-        #layer-1,
-        #layer-2 {
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        #layer-1 {
-            border-bottom: none;
-            border-bottom-left-radius: 6px;
-            border-bottom-right-radius: 6px;
-        }
-
-        #layer-2 {
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
-        }
-
-        /* 当前活跃层的特殊效果 */
-        .layer-active {
-            border: 2px solid #fbbf24 !important;
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6) !important;
-            animation: layer-pulse 1s ease-in-out infinite alternate !important;
-            z-index: 10 !important;
-        }
-
-        .layer-completed {
-            border: 1px solid #10b981 !important;
-            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4) !important;
-            z-index: 5 !important;
-        }
-
-        /* 水波纹效果 */
-        .water-ripple {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .water-ripple::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: water-flow 2s linear infinite;
-        }
-
-        @keyframes water-flow {
-            0% {
-                left: -100%;
-            }
-
-            100% {
-                left: 100%;
-            }
-        }
-
-        /* 层级完成时的视觉反馈动画 */
-        .layer-success {
-            animation: layer-success-flash 1.2s ease-out forwards;
-        }
-
-        @keyframes layer-success-flash {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-            }
-
-            20% {
-                transform: scale(1.1);
-                box-shadow: 0 0 30px rgba(16, 185, 129, 0.8), 0 0 60px rgba(34, 197, 94, 0.6);
-                border-color: #22c55e !important;
-            }
-
-            40% {
-                transform: scale(1.05);
-                box-shadow: 0 0 40px rgba(34, 197, 94, 1), 0 0 80px rgba(74, 222, 128, 0.8);
-            }
-
-            60% {
-                transform: scale(1.08);
-                box-shadow: 0 0 35px rgba(16, 185, 129, 0.9), 0 0 70px rgba(34, 197, 94, 0.7);
-            }
-
-            80% {
-                transform: scale(1.02);
-                box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), 0 0 40px rgba(34, 197, 94, 0.4);
-            }
-
-            100% {
-                transform: scale(1);
-                box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
-                border-color: #10b981 !important;
-            }
-        }
-
-        /* 成功粒子效果 */
-        .success-particles {
-            position: absolute;
             pointer-events: none;
-            z-index: 20;
         }
 
-        .success-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            animation: particle-burst 1s ease-out forwards;
-        }
-
-        @keyframes particle-burst {
-            0% {
-                opacity: 1;
-                transform: scale(0) translate(0, 0);
-            }
-
-            50% {
-                opacity: 0.8;
-                transform: scale(1.2);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0.3) translate(var(--dx), var(--dy));
-            }
-        }
-
-        /* 层级解锁动画 */
-        .layer-unlock {
-            animation: layer-unlock-reveal 0.8s ease-out forwards;
-        }
-
-        @keyframes layer-unlock-reveal {
-            0% {
-                opacity: 0;
-                transform: translateY(20px) scale(0.8);
-                filter: blur(4px);
-            }
-
-            50% {
-                opacity: 0.7;
-                transform: translateY(-5px) scale(1.05);
-                filter: blur(2px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-                filter: blur(0);
-            }
-        }
-
-        /* 成功文字提示 */
         .success-text {
             position: absolute;
-            color: #22c55e;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #10b981;
             font-weight: bold;
             font-size: 14px;
             pointer-events: none;
-            z-index: 25;
-            animation: success-text-float 2s ease-out forwards;
-            text-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+            animation: fly-up 2s ease-out forwards;
         }
 
-        @keyframes success-text-float {
-            0% {
-                opacity: 0;
-                transform: translateY(10px) scale(0.8);
-            }
-
-            20% {
-                opacity: 1;
-                transform: translateY(-10px) scale(1.1);
-            }
-
-            80% {
-                opacity: 1;
-                transform: translateY(-30px) scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateY(-50px) scale(0.9);
-            }
-        }
-
-        /* 倒水成功时的瓶子震动效果 */
-        .bottle-shake {
-            animation: bottle-shake 0.6s ease-in-out;
-        }
-
-        @keyframes bottle-shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            10% {
-                transform: translateX(-2px) rotate(-1deg);
-            }
-
-            20% {
-                transform: translateX(2px) rotate(1deg);
-            }
-
-            30% {
-                transform: translateX(-2px) rotate(-1deg);
-            }
-
-            40% {
-                transform: translateX(2px) rotate(1deg);
-            }
-
-            50% {
-                transform: translateX(-1px) rotate(-0.5deg);
-            }
-
-            60% {
-                transform: translateX(1px) rotate(0.5deg);
-            }
-
-            70% {
-                transform: translateX(-1px) rotate(-0.5deg);
-            }
-
-            80% {
-                transform: translateX(1px) rotate(0.5deg);
-            }
-
-            90% {
-                transform: translateX(0) rotate(0deg);
-            }
-        }
-
-        /* 屏幕震动效果 */
-        .screen-shake {
-            animation: screen-shake 0.5s ease-in-out;
-        }
-
-        @keyframes screen-shake {
-
-            0%,
-            100% {
-                transform: translate(0, 0);
-            }
-
-            10% {
-                transform: translate(-1px, -1px);
-            }
-
-            20% {
-                transform: translate(1px, 1px);
-            }
-
-            30% {
-                transform: translate(-1px, 1px);
-            }
-
-            40% {
-                transform: translate(1px, -1px);
-            }
-
-            50% {
-                transform: translate(-1px, -1px);
-            }
-
-            60% {
-                transform: translate(1px, 1px);
-            }
-
-            70% {
-                transform: translate(-1px, 1px);
-            }
-
-            80% {
-                transform: translate(1px, -1px);
-            }
-
-            90% {
-                transform: translate(-1px, -1px);
-            }
-        }
-
-        /* 成功时的全屏闪光效果 */
-        .success-flash {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 15;
-            animation: success-flash-fade 0.8s ease-out forwards;
-        }
-
-        @keyframes success-flash-fade {
-            0% {
-                opacity: 0;
-            }
-
-            30% {
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0;
-            }
-        }
-
-        /* 爆炸特效 */
-        .explosion-container {
-            position: absolute;
-            pointer-events: none;
-            z-index: 30;
-            width: 100%;
-            height: 100%;
-        }
-
-        .explosion-ring {
-            position: absolute;
-            border-radius: 50%;
-            border: 3px solid;
-            animation: explosion-expand 0.8s ease-out forwards;
-        }
-
-        @keyframes explosion-expand {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-
-            50% {
-                opacity: 0.8;
-            }
-
-            100% {
-                width: 120px;
-                height: 120px;
-                opacity: 0;
-                transform: translate(-50%, -50%);
-            }
-        }
-
-        .explosion-spark {
-            position: absolute;
-            width: 4px;
-            height: 12px;
-            border-radius: 2px;
-            animation: spark-fly 1.2s ease-out forwards;
-        }
-
-        @keyframes spark-fly {
-            0% {
-                opacity: 1;
-                transform: scale(1) translate(0, 0) rotate(0deg);
-            }
-
-            20% {
-                opacity: 1;
-                transform: scale(1.2) translate(var(--spark-dx), var(--spark-dy)) rotate(var(--spark-rotation));
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0.3) translate(calc(var(--spark-dx) * 2), calc(var(--spark-dy) * 2)) rotate(calc(var(--spark-rotation) + 180deg));
-            }
-        }
-
-        .explosion-wave {
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(34, 197, 94, 0.4) 30%, transparent 70%);
-            animation: wave-expand 0.6s ease-out forwards;
-        }
-
-        @keyframes wave-expand {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-
-            100% {
-                width: 100px;
-                height: 100px;
-                opacity: 0;
-                transform: translate(-50%, -50%);
-            }
-        }
-
-        /* 爆炸碎片效果 */
-        .explosion-fragment {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            border-radius: 1px;
-            animation: fragment-scatter 1.5s ease-out forwards;
-        }
-
-        @keyframes fragment-scatter {
-            0% {
-                opacity: 1;
-                transform: scale(1) translate(0, 0) rotate(0deg);
-            }
-
-            30% {
-                opacity: 1;
-                transform: scale(1.1) translate(var(--frag-dx), var(--frag-dy)) rotate(var(--frag-rotation));
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0.2) translate(calc(var(--frag-dx) * 1.8), calc(var(--frag-dy) * 1.8 + 30px)) rotate(calc(var(--frag-rotation) + 360deg));
-            }
-        }
-
-        /* 淡出动画 */
-        @keyframes fadeOut {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-        }
-
-        /* 玩家瓶子消失动画 */
-        @keyframes bottle-disappear {
-            0% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-
-            50% {
-                opacity: 0.5;
-                transform: scale(0.8) translateY(-10px);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0.3) translateY(-30px);
-            }
-        }
-
-        /* 玩家瓶子出现动画 */
-        @keyframes bottle-appear {
-            0% {
-                opacity: 0;
-                transform: scale(0.3) translateY(30px);
-            }
-
-            30% {
-                opacity: 0.5;
-                transform: scale(0.9) translateY(10px);
-            }
-
-            70% {
-                opacity: 0.8;
-                transform: scale(1.1) translateY(-5px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        /* 新瓶子闪光效果 */
-        @keyframes bottle-shine {
-            0% {
-                box-shadow: 0 0 0 rgba(59, 130, 246, 0);
-            }
-
-            50% {
-                box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 40px rgba(59, 130, 246, 0.4);
-            }
-
-            100% {
-                box-shadow: 0 0 0 rgba(59, 130, 246, 0);
-            }
-        }
-
-        /* 动画类 */
-        .bottle-disappearing {
-            animation: bottle-disappear 0.4s ease-in forwards !important;
-        }
-
-        .bottle-appearing {
-            animation: bottle-appear 0.6s ease-out forwards !important;
-        }
-
-        .bottle-shining {
-            animation: bottle-shine 1.5s ease-in-out !important;
-        }
-
-        /* 响应式游戏容器样式 */
         #app {
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
@@ -696,85 +213,7 @@
 </head>
 
 <body class="bg-gray-100 m-0 p-0">
-    <div id="app" class="bg-gray-100 relative overflow-hidden w-full max-w-md mx-auto min-h-screen flex flex-col">
-        <!-- 彩带效果容器 -->
-        <div id="confetti-container" class="fixed inset-0 pointer-events-none z-30 overflow-hidden hidden"></div>
-
-        <!-- 礼盒动画容器 -->
-        <div id="gift-box-container"
-            class="fixed inset-0 flex items-center justify-center z-40 pointer-events-none hidden">
-            <div class="relative">
-                <!-- 礼盒关闭状态 -->
-                <div id="gift-box-closed" class="animate-bounce-scale">
-                    <div
-                        class="w-24 h-24 bg-gradient-to-br from-red-500 to-pink-500 rounded-lg shadow-xl relative cursor-pointer">
-                    </div>
-                    <div class="absolute top-10 left-0 right-0 h-4 bg-yellow-400"></div>
-                    <div class="absolute left-10 top-0 bottom-0 w-4 bg-yellow-400"></div>
-                    <div class="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                        <div class="w-8 h-5 bg-red-600 rounded-full relative">
-                            <div class="absolute -left-2 top-0.5 w-5 h-4 bg-red-600 rounded-full"></div>
-                            <div class="absolute -right-2 top-0.5 w-5 h-4 bg-red-600 rounded-full"></div>
-                        </div>
-                    </div>
-                    <div
-                        class="absolute -inset-4 bg-gradient-to-r from-yellow-400/40 to-orange-400/40 rounded-full animate-ping">
-                    </div>
-                </div>
-
-                <!-- 倒计时显示 -->
-                <div id="countdown-display" class="absolute -bottom-20 left-1/2 transform -translate-x-1/2 text-center">
-                    <div class="text-white font-bold text-lg animate-pulse mb-3">
-                        点击开启！
-                    </div>
-                    <div class="bg-black/50 rounded-full px-6 py-2 flex items-center justify-center gap-2">
-                        <div class="text-yellow-400 font-bold text-xl" id="countdown-text">3</div>
-                        <div class="text-white text-sm">秒后自动开启</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 礼盒开启状态 -->
-            <div id="gift-box-opened" class="hidden animate-gift-open">
-                <div class="relative">
-                    <!-- 开启的礼盒 -->
-                    <div class="w-24 h-16 bg-gradient-to-br from-red-500 to-pink-500 rounded-b-lg shadow-xl relative">
-                        <div class="absolute top-6 left-0 right-0 h-4 bg-yellow-400"></div>
-                        <div class="absolute left-10 top-0 bottom-0 w-4 bg-yellow-400"></div>
-                    </div>
-                    <!-- 开启的盖子 -->
-                    <div
-                        class="absolute -top-4 left-2 w-20 h-12 bg-gradient-to-br from-red-600 to-pink-600 rounded-t-lg transform -rotate-12 origin-bottom-left">
-                        <div class="absolute top-4 left-0 right-0 h-3 bg-yellow-400"></div>
-                        <div class="absolute left-8 top-0 bottom-0 w-3 bg-yellow-400"></div>
-                        <div class="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                            <div class="w-6 h-4 bg-red-700 rounded-full relative">
-                                <div class="absolute -left-1 top-0.5 w-4 h-3 bg-red-700 rounded-full"></div>
-                                <div class="absolute -right-1 top-0.5 w-4 h-3 bg-red-700 rounded-full"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 奖励光芒效果 -->
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div
-                            class="w-32 h-32 bg-gradient-to-r from-yellow-300/60 to-orange-300/60 rounded-full animate-ping">
-                        </div>
-                        <div
-                            class="absolute w-24 h-24 bg-gradient-to-r from-yellow-400/80 to-orange-400/80 rounded-full animate-pulse">
-                        </div>
-                    </div>
-
-                    <!-- 飞出的奖励 -->
-                    <div id="flying-reward" class="absolute top-4 left-1/2 transform -translate-x-1/2 animate-fly-up">
-                        <div
-                            class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-xl shadow-lg border-2 border-yellow-300">
-                            +50 积分!
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id="app" class="bg-gray-100 relative w-full max-w-md mx-auto h-screen flex flex-col">
 
         <!-- 顶部信息栏 -->
         <div class="flex justify-between items-center p-4 bg-white shadow-sm border-b border-gray-200 relative z-10">
@@ -789,113 +228,11 @@
             </button>
         </div>
 
-        <!-- 游戏状态覆盖层 - 等待开始 -->
-        <div id="waiting-overlay" class="absolute inset-0 bg-black/50 flex items-center justify-center z-20">
-            <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl">
-                <h2 class="text-xl font-bold mb-4 text-gray-800">准备开始</h2>
-                <p class="text-gray-600 mb-6 text-sm">
-                    你的瓶子是<span id="player-color-text" class="font-bold"
-                        style="color: #ef4444">红色</span>，当目标瓶当前层变成相同颜色时点击屏幕倒水！需要完成两层挑战才能获胜。
-                </p>
-                <button id="start-btn"
-                    class="px-8 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg">
-                    开始挑战 (-10积分)
-                </button>
-            </div>
-        </div>
-
-        <!-- 失败状态 -->
-        <div id="failed-overlay" class="absolute inset-0 bg-red-900/50 flex items-center justify-center z-20 hidden">
-            <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl">
-                <div class="text-6xl mb-4">💥</div>
-                <h2 class="text-xl font-bold mb-2 text-red-600">时机不对！</h2>
-                <p id="failed-message" class="text-gray-600 mb-6 text-sm">
-                    目标是<span id="target-color-failed" class="font-bold">红色</span>，你倒的是<span id="player-color-failed"
-                        class="font-bold">红色</span>
-                </p>
-                <button id="retry-btn"
-                    class="px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg">
-                    再试一次
-                </button>
-            </div>
-        </div>
-
-        <!-- 奖励展示状态 -->
-        <div id="reward-overlay"
-            class="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 flex items-center justify-center z-20 hidden">
-            <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl relative overflow-hidden">
-                <!-- 庆祝特效 -->
-                <div class="absolute inset-0 pointer-events-none">
-                    <svg class="absolute top-4 left-4 text-yellow-400 animate-pulse" width="20" height="20"
-                        viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                    <svg class="absolute top-6 right-6 text-pink-400 animate-pulse" width="16" height="16"
-                        viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                    <svg class="absolute bottom-8 left-8 text-blue-400 animate-pulse" width="18" height="18"
-                        viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                    <svg class="absolute bottom-4 right-4 text-purple-400 animate-pulse" width="14" height="14"
-                        viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                </div>
-                <div class="text-6xl mb-4">🎉</div>
-                <h2 class="text-xl font-bold mb-4 text-green-600">完美匹配！</h2>
-                <div id="reward-display"
-                    class="inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-gray-400 to-gray-600 text-white mb-6 shadow-lg">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        class="text-yellow-500">
-                        <circle cx="12" cy="12" r="3" />
-                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
-                    </svg>
-                    <span class="font-bold text-lg">积分 +50</span>
-                </div>
-
-                <!-- 分享按钮区域 -->
-                <div class="flex gap-3 mb-6">
-                    <button id="share-btn"
-                        class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg flex items-center justify-center gap-2">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <circle cx="18" cy="5" r="3" />
-                            <circle cx="6" cy="12" r="3" />
-                            <circle cx="18" cy="19" r="3" />
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                        分享成果
-                    </button>
-                    <button id="screenshot-btn"
-                        class="px-4 py-3 bg-gradient-to-r from-indigo-500 to-blue-500 hover:from-indigo-600 hover:to-blue-600 text-white rounded-xl font-bold transition-all shadow-lg">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path
-                                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-                            <circle cx="12" cy="13" r="4" />
-                        </svg>
-                    </button>
-                </div>
-
-                <button id="continue-btn"
-                    class="w-full px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white rounded-xl font-bold transition-all shadow-lg">
-                    再次挑战 (-10积分)
-                </button>
-            </div>
-        </div>
-
         <!-- 主游戏区域 -->
-        <div id="game-area" class="flex-1 p-6 pt-16 pb-12">
+        <div id="game-area" class="flex-1 p-4 relative">
             <!-- 游戏提示 -->
-            <div id="game-hint" class="text-center mb-8 hidden">
-                <div class="inline-block bg-blue-500 text-white px-4 py-2 rounded-full text-sm animate-pulse">
+            <div id="game-hint" class="text-center mb-6 hidden">
+                <div class="inline-block bg-blue-500 text-white px-3 py-1.5 rounded-full text-xs animate-pulse">
                     等待第<span id="current-layer-hint">1</span>层变成<span id="hint-color" class="font-bold">红色</span>时点击屏幕！
                 </div>
                 <!-- 倒计时进度条 -->
@@ -910,7 +247,7 @@
             </div>
 
             <!-- 游戏容器 -->
-            <div class="flex items-center justify-between gap-8 h-full px-4">
+            <div class="flex items-center justify-between gap-4 px-4 h-64">
                 <!-- 左侧：倾斜的玩家瓶 -->
                 <div class="relative flex-shrink-0">
                     <div class="text-sm text-gray-500 mb-2 text-center">倾斜的玩家瓶</div>
@@ -930,13 +267,18 @@
                     </div>
                 </div>
 
+                <!-- 箭头 -->
+                <div class="flex flex-col items-center">
+                    <div class="text-2xl text-gray-400">→</div>
+                    <div id="pouring-text" class="text-xs text-gray-500 mt-1 animate-bounce hidden">倒入中...</div>
+                </div>
+
                 <!-- 右侧：目标瓶 -->
                 <div class="relative flex-shrink-0">
                     <div class="text-sm text-gray-500 mb-2 text-center">目标瓶</div>
-                    <div class="flex justify-center"></div>
                     <div class="relative cursor-pointer" id="target-bottle">
                         <div
-                            class="bottle-container w-20 h-48 bg-white border-2 rounded-lg relative overflow-hidden shadow-md transition-all duration-300 border-gray-300">
+                            class="bottle-container w-20 h-40 bg-white border-2 rounded-lg relative overflow-hidden shadow-md transition-all duration-300 border-gray-300">
                             <div
                                 class="absolute -top-2 left-1/2 transform -translate-x-1/2 w-10 h-5 bg-gray-200 border border-gray-300 rounded-t-lg">
                             </div>
@@ -965,15 +307,14 @@
             </div>
 
             <!-- 倒水动画 -->
-            <div id="pouring-animation" class="absolute top-8 right-0 transform translate-x-8 hidden">
-                <div id="pouring-liquid" class="w-2 h-16 rounded-full opacity-80 animate-pulse"
-                    style="background-color: #ef4444;"></div>
-            </div>
-
-            <!-- 箭头 -->
-            <div class="flex flex-col items-center">
-                <div class="text-2xl text-gray-400">→</div>
-                <div id="pouring-text" class="text-xs text-gray-500 mt-1 animate-bounce hidden">倒入中...</div>
+            <div id="pouring-animation" class="absolute top-32 right-16 hidden">
+                <div id="pouring-liquid" class="w-2 h-16 rounded-full opacity-80 transform-gpu"
+                    style="background-color: #ef4444; transform-origin: top center;"></div>
+                <!-- 添加水滴效果 -->
+                <div id="water-drops" class="absolute top-16 left-0 w-2">
+                    <div class="w-1 h-1 bg-current rounded-full opacity-60 animate-bounce" style="animation-delay: 0.1s;"></div>
+                    <div class="w-1 h-1 bg-current rounded-full opacity-40 animate-bounce mt-1" style="animation-delay: 0.3s;"></div>
+                </div>
             </div>
 
             <!-- 宝箱区域 -->
@@ -992,28 +333,155 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- 底部提示 -->
-        <div id="click-hint" class="absolute bottom-8 left-0 right-0 text-center hidden">
-            <div class="bg-black/70 text-white px-6 py-3 rounded-full mx-8">
-                <div class="text-sm">点击屏幕倒水到目标瓶</div>
-            </div>
+    <!-- 固定定位的UI元素 -->
+    <!-- 彩带效果容器 -->
+    <div id="confetti-container" class="fixed inset-0 pointer-events-none z-30 overflow-hidden hidden"></div>
+
+    <!-- 底部提示 -->
+    <div id="click-hint" class="fixed bottom-8 left-0 right-0 text-center hidden z-25">
+        <div class="bg-black/70 text-white px-6 py-3 rounded-full mx-8">
+            <div class="text-sm">点击屏幕倒水到目标瓶</div>
         </div>
+    </div>
 
+    <!-- 颜色变化指示器 -->
+    <div id="color-indicator" class="fixed top-24 right-4 flex flex-col gap-1 hidden z-25">
+        <div class="text-xs text-gray-500 mb-1">颜色循环</div>
+        <div id="color-red"
+            class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-125 border-white shadow-lg"
+            style="background-color: #ef4444;"></div>
+        <div id="color-yellow"
+            class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60"
+            style="background-color: #eab308;"></div>
+        <div id="color-blue"
+            class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60"
+            style="background-color: #3b82f6;"></div>
+    </div>
 
+    <!-- 游戏状态覆盖层 -->
+    <!-- 等待开始 -->
+    <div id="waiting-overlay" class="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
+        <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">准备开始</h2>
+            <p class="text-gray-600 mb-6 text-sm">
+                你的瓶子是<span id="player-color-text" class="font-bold"
+                    style="color: #ef4444">红色</span>，当目标瓶当前层变成相同颜色时点击屏幕倒水！需要完成两层挑战才能获胜。
+            </p>
+            <button id="start-btn"
+                class="px-8 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg">
+                开始挑战 (-10积分)
+            </button>
+        </div>
+    </div>
 
-        <!-- 颜色变化指示器 -->
-        <div id="color-indicator" class="absolute top-24 right-4 flex flex-col gap-1 hidden">
-            <div class="text-xs text-gray-500 mb-1">颜色循环</div>
-            <div id="color-red"
-                class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-125 border-white shadow-lg"
-                style="background-color: #ef4444;"></div>
-            <div id="color-yellow"
-                class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60"
-                style="background-color: #eab308;"></div>
-            <div id="color-blue"
-                class="w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60"
-                style="background-color: #3b82f6;"></div>
+    <!-- 失败状态 -->
+    <div id="failed-overlay" class="fixed inset-0 bg-red-900/50 flex items-center justify-center z-40 hidden">
+        <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl">
+            <div class="text-6xl mb-4">💥</div>
+            <h2 class="text-xl font-bold mb-2 text-red-600">时机不对！</h2>
+            <p id="failed-message" class="text-gray-600 mb-6 text-sm">
+                目标是<span id="target-color-failed" class="font-bold">红色</span>，你倒的是<span id="player-color-failed"
+                    class="font-bold">红色</span>
+            </p>
+            <button id="retry-btn"
+                class="px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg">
+                再试一次 (-10积分)
+            </button>
+        </div>
+    </div>
+
+    <!-- 奖励展示状态 -->
+    <div id="reward-overlay"
+        class="fixed inset-0 bg-gradient-to-br from-yellow-400/20 to-orange-400/20 flex items-center justify-center z-40 hidden">
+        <div class="bg-white rounded-2xl p-8 mx-4 text-center shadow-xl relative overflow-hidden">
+            <!-- 庆祝特效 -->
+            <div class="absolute inset-0 pointer-events-none">
+                <svg class="absolute top-4 left-4 text-yellow-400 animate-pulse" width="20" height="20"
+                    viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                <svg class="absolute top-4 right-4 text-orange-400 animate-pulse" width="16" height="16"
+                    viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+            </div>
+
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="text-xl font-bold mb-2 text-green-600">挑战成功！</h2>
+            <div id="reward-display" class="mb-6">
+                <div
+                    class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-xl shadow-lg border-2 border-yellow-300">
+                    +50 积分!
+                </div>
+            </div>
+
+            <div class="flex gap-3 justify-center">
+                <button id="share-btn"
+                    class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-all">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1" />
+                    </svg>
+                    <span class="font-bold text-lg">积分 +50</span>
+                </button>
+            </div>
+
+            <button id="continue-btn"
+                class="w-full px-8 py-3 bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white rounded-xl font-bold transition-all shadow-lg mt-4">
+                再次挑战 (-10积分)
+            </button>
+        </div>
+    </div>
+
+    <!-- 礼盒动画容器 -->
+    <div id="gift-box-container" class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none hidden">
+        <div class="relative flex flex-col items-center">
+            <!-- 主要奖励显示区域 -->
+            <div id="flying-reward" class="mb-8 animate-fly-up hidden">
+                <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl text-center">
+                    <div class="text-4xl font-black mb-2">🎉</div>
+                    <div class="text-3xl font-black">+88 积分!</div>
+                </div>
+            </div>
+
+            <!-- 礼盒区域 -->
+            <div class="relative">
+                <!-- 礼盒关闭状态 -->
+                <div id="gift-box-closed" class="animate-bounce-scale">
+                    <div class="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-500 rounded-lg shadow-xl relative cursor-pointer">
+                        <div class="absolute top-8 left-0 right-0 h-3 bg-yellow-400"></div>
+                        <div class="absolute left-8 top-0 bottom-0 w-3 bg-yellow-400"></div>
+                        <div class="absolute -top-1.5 left-1/2 transform -translate-x-1/2">
+                            <div class="w-6 h-4 bg-red-600 rounded-full relative">
+                                <div class="absolute -left-1.5 top-0.5 w-4 h-3 bg-red-600 rounded-full"></div>
+                                <div class="absolute -right-1.5 top-0.5 w-4 h-3 bg-red-600 rounded-full"></div>
+                            </div>
+                        </div>
+                        <div class="absolute -inset-3 bg-gradient-to-r from-yellow-400/40 to-orange-400/40 rounded-full animate-ping"></div>
+                    </div>
+                </div>
+
+                <!-- 礼盒开启状态 -->
+                <div id="gift-box-opened" class="animate-gift-open hidden">
+                    <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg shadow-xl relative">
+                        <div class="absolute inset-2 bg-white rounded-lg flex items-center justify-center">
+                            <div class="text-xl">🎁</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 倒计时显示 - 缩小并移到底部 -->
+            <div id="countdown-display" class="mt-6 text-center">
+                <div class="text-white font-medium text-sm animate-pulse mb-2">点击开启！</div>
+                <div class="bg-black/40 rounded-lg px-3 py-1 flex items-center justify-center gap-1">
+                    <div class="text-yellow-400 font-bold text-sm" id="countdown-text">3</div>
+                    <div class="text-white text-xs">秒后自动开启</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1023,38 +491,31 @@
         // 游戏状态和变量
         let gameState = 'waiting';
         let playerColor = 'red';
-        let currentLayer = 1; // 当前挑战的层数 (1-2)
-        let layerColors = ['red', 'yellow']; // 两层的目标颜色
-        let completedLayerColors = []; // 记录每层成功时的颜色
-        let currentLayerColor = 'red'; // 当前层的变化颜色
+        let currentLayer = 1;
+        let layerColors = ['red', 'yellow'];
+        let completedLayerColors = [];
+        let currentLayerColor = 'red';
         let colorIndex = 0;
         let points = 1200;
         let reward = null;
         let isAnimating = false;
-        let showChest = false;
-        let chestOpened = false;
-        let showConfetti = false;
-        let showGiftBox = false;
-        let colorInterval = null;
-        let countdownInterval = null;
-        let countdownProgress = 100;
-        let colorChangeTime = 0;
-        let currentColorDuration = 1200;
-        let comboCount = 0; // 连击计数
-        let lastSuccessTime = 0; // 上次成功时间
+        let colorTimer = null;
+        let countdownTimer = null;
 
+        // 颜色配置
         const colors = ['red', 'yellow', 'blue'];
         const colorMap = {
-            red: '#ef4444',
-            yellow: '#eab308',
-            blue: '#3b82f6'
+            'red': '#ef4444',
+            'yellow': '#eab308',
+            'blue': '#3b82f6'
         };
         const colorNames = {
-            red: '红',
-            yellow: '黄',
-            blue: '蓝'
+            'red': '红色',
+            'yellow': '黄色',
+            'blue': '蓝色'
         };
 
+        // 奖励配置
         const rewards = [
             { type: 'points', amount: 1, name: '积分 +1', rarity: 'common' },
             { type: 'points', amount: 10, name: '积分 +10', rarity: 'common' },
@@ -1079,1058 +540,97 @@
             retryBtn: document.getElementById('retry-btn'),
             continueBtn: document.getElementById('continue-btn'),
             shareBtn: document.getElementById('share-btn'),
-            screenshotBtn: document.getElementById('screenshot-btn'),
             playerColorText: document.getElementById('player-color-text'),
             hintColor: document.getElementById('hint-color'),
             playerBottleLiquid: document.getElementById('player-bottle-liquid'),
             playerBottleText: document.getElementById('player-bottle-text'),
-            playerBottleContainer: document.getElementById('player-bottle-container'),
             targetBottle: document.getElementById('target-bottle'),
             layer1: document.getElementById('layer-1'),
             layer2: document.getElementById('layer-2'),
-
             layerProgress: document.getElementById('layer-progress'),
             pouringAnimation: document.getElementById('pouring-animation'),
             pouringLiquid: document.getElementById('pouring-liquid'),
             pouringText: document.getElementById('pouring-text'),
             confettiContainer: document.getElementById('confetti-container'),
             giftBoxContainer: document.getElementById('gift-box-container'),
-            giftRewardText: document.getElementById('gift-reward-text'),
             rewardDisplay: document.getElementById('reward-display'),
-            countdownBar: document.getElementById('countdown-bar')
+            countdownBar: document.getElementById('countdown-bar'),
+            currentLayerHint: document.getElementById('current-layer-hint'),
+            failedMessage: document.getElementById('failed-message'),
+            targetColorFailed: document.getElementById('target-color-failed'),
+            playerColorFailed: document.getElementById('player-color-failed')
         };
+
+        // 随机选择玩家瓶颜色
+        function randomizePlayerColor() {
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            playerColor = colors[randomIndex];
+            updatePlayerColor();
+            console.log('Player color randomized to:', playerColor);
+        }
+
+        // 更新玩家瓶颜色显示
+        function updatePlayerColor() {
+            const colorValue = colorMap[playerColor];
+            const colorName = colorNames[playerColor];
+
+            elements.playerBottleLiquid.style.backgroundColor = colorValue;
+            elements.playerBottleText.textContent = colorName.replace('色', '') + '水';
+            elements.playerColorText.textContent = colorName;
+            elements.playerColorText.style.color = colorValue;
+            elements.pouringLiquid.style.backgroundColor = colorValue;
+        }
+
+        // 动态颜色刷新系统
+        function refreshPlayerColor() {
+            // 随机选择一个新的颜色，确保与当前颜色不同
+            const availableColors = colors.filter(color => color !== playerColor);
+            const newColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+            
+            playerColor = newColor;
+            updatePlayerColor();
+            showColorChangeNotification();
+            console.log('Player color refreshed to:', playerColor);
+        }
+
+        // 颜色变化通知系统（优化版）
+        function showColorChangeNotification() {
+            // 获取玩家瓶子的位置
+            const playerBottleContainer = document.getElementById('player-bottle-container');
+            const rect = playerBottleContainer.getBoundingClientRect();
+            
+            const notification = document.createElement('div');
+            notification.className = 'fixed bg-white text-gray-800 px-3 py-2 rounded-lg font-medium text-sm shadow-lg border-2 z-50 transition-all duration-300';
+            notification.style.borderColor = colorMap[playerColor];
+            notification.style.left = (rect.left + rect.width / 2) + 'px';
+            notification.style.top = (rect.top - 50) + 'px';
+            notification.style.transform = 'translateX(-50%)';
+            notification.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <div class="w-4 h-4 rounded-full border border-gray-300" style="background-color: ${colorMap[playerColor]}"></div>
+                    <span>${colorNames[playerColor]}</span>
+                </div>
+            `;
+            
+            // 添加冒泡动画
+            notification.style.animation = 'bubble-up 0.8s ease-out forwards';
+            
+            // 0.8秒后自动消失
+            document.body.appendChild(notification);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(-50%) translateY(-10px)';
+                setTimeout(() => notification.remove(), 200);
+            }, 600);
+        }
 
         // 更新积分显示
         function updatePointsDisplay() {
             elements.pointsDisplay.textContent = `积分：${points}`;
         }
 
-        // 更新颜色指示器
-        function updateColorIndicator() {
-            colors.forEach((color, index) => {
-                const element = document.getElementById(`color-${color}`);
-                if (index === colorIndex) {
-                    element.className = 'w-4 h-4 rounded-full border-2 transition-all duration-200 scale-125 border-white shadow-lg';
-                } else {
-                    element.className = 'w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60';
-                }
-            });
-        }
-
-        // 开始游戏
-        function startGame() {
-            if (points < 10) return;
-            points -= 10;
-            updatePointsDisplay();
-            gameState = 'playing';
-
-            // 重置连击计数 
-            comboCount = 0;
-            lastSuccessTime = 0;
-
-            // 隐藏等待界面，显示游戏界面 
-            elements.waitingOverlay.classList.add('hidden');
-            elements.gameHint.classList.remove('hidden');
-            elements.clickHint.classList.remove('hidden');
-            elements.colorIndicator.classList.remove('hidden');
-
-            // 重置游戏状态 
-            reward = null;
-            isAnimating = false;
-            showChest = false;
-            chestOpened = false;
-            showConfetti = false;
-            showGiftBox = false;
-            currentLayer = 1;
-            completedLayerColors = [];
-            // 重置已完成层的颜色记录 
-            // 随机设置玩家颜色（游戏开始时确定，整局不变） 
-            const randomPlayerColor = colors[Math.floor(Math.random() * colors.length)];
-            playerColor = randomPlayerColor;
-            // 随机生成两层的目标颜色 
-            layerColors = [
-                colors[Math.floor(Math.random() * colors.length)],
-                colors[Math.floor(Math.random() * colors.length)]
-            ];
-            // 重置颜色索引和当前层颜色 
-            // 从第一个颜色开始正常循环 
-            colorIndex = 0;
-            currentLayerColor = colors[0];
-
-            // 更新UI 
-            updatePlayerColor();
-            updateLayerDisplay();
-            updateColorIndicator();
-
-            console.log('游戏开始:', {
-                playerColor,
-                currentLayer,
-                layerColors,
-                currentLayerColor,
-                targetColorForCurrentLayer: layerColors[currentLayer - 1],
-                colorConsistencyCheck: currentLayerColor === layerColors[currentLayer - 1] ? '✅ 一致' : '❌ 不一致'
-            });
-
-            // 开始颜色变化循环 
-            startColorCycling();
-            resetCountdown();
-
-            // 设置点击事件
-            elements.gameArea.style.cursor = 'pointer';
-        }
-
-        // 更新层级显示 
-        function updateLayerDisplay() {
-            // 重置所有层的样式
-            [elements.layer1, elements.layer2].forEach((layer, index) => {
-                // 清除所有样式类
-                layer.classList.remove('layer-completed', 'layer-active', 'water-ripple');
-
-                if (index + 1 < currentLayer) {
-                    // 已完成的层：显示为已填充状态，使用成功时的颜色 
-                    layer.classList.remove('hidden');
-                    layer.style.opacity = '1';
-                    const completedColor = completedLayerColors[index] || playerColor;
-                    layer.style.backgroundColor = colorMap[completedColor];
-                    layer.classList.add('layer-completed');
-                } else if (index + 1 === currentLayer) {
-                    // 当前挑战层：显示并高亮，颜色会变化 
-                    layer.classList.remove('hidden');
-                    layer.style.opacity = '1';
-                    layer.style.backgroundColor = colorMap[currentLayerColor];
-                    layer.classList.add('layer-active', 'water-ripple');
-                } else {
-                    // 未到达的层：隐藏 
-                    layer.classList.add('hidden');
-                    layer.style.opacity = '0';
-                }
-            });
-
-            // 更新进度显示 
-            elements.layerProgress.textContent = `${currentLayer}/2`;
-
-            // 更新提示中的当前层数 
-            const layerHint = document.getElementById('current-layer-hint');
-            if (layerHint) {
-                layerHint.textContent = currentLayer;
-            }
-        }
-
-        // 获取当前颜色应该显示的时间 
-        function getCurrentColorDuration() {
-            // 如果当前颜色与玩家颜色匹配，显示更长时间 
-            if (currentLayerColor === playerColor) {
-                return 1000; // 匹配颜色显示1秒 
-            } else {
-                return 500; // 非匹配颜色显示0.5秒
-            }
-        }
-
-        // 开始颜色循环 
-        function startColorCycling() {
-            function nextColor() {
-                colorIndex = (colorIndex + 1) % colors.length;
-                currentLayerColor = colors[colorIndex];
-                console.log('颜色切换:', {
-                    currentLayerColor,
-                    playerColor,
-                    targetColor: layerColors[currentLayer - 1],
-                    isMatch: currentLayerColor === playerColor,
-                    shouldMatch: layerColors[currentLayer - 1] === playerColor
-                });
-                // 更新当前层的颜色显示 
-                updateLayerDisplay();
-                updateColorIndicator();
-                // 根据是否匹配设置不同的显示时间 
-                currentColorDuration = getCurrentColorDuration();
-                resetCountdown();
-                // 设置下一次切换的时间 
-                colorInterval = setTimeout(nextColor, currentColorDuration);
-            }
-
-            // 首先更新UI显示当前颜色
-            updateLayerDisplay();
-            updateColorIndicator();
-            // 根据当前颜色设置显示时间
-            currentColorDuration = getCurrentColorDuration();
-            resetCountdown();
-            // 设置第一次切换的时间（不立即切换）
-            colorInterval = setTimeout(nextColor, currentColorDuration);
-        }
-
-        // 停止颜色循环 
-        function stopColorCycling() {
-            if (colorInterval) {
-                clearTimeout(colorInterval);
-                colorInterval = null;
-            }
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-                countdownInterval = null;
-            }
-        }
-
-        // 重置倒计时 
-        function resetCountdown() {
-            countdownProgress = 100;
-            colorChangeTime = Date.now();
-            // 清除之前的倒计时 
-            if (countdownInterval) {
-                clearInterval(countdownInterval);
-            }
-            // 开始新的倒计时 
-            countdownInterval = setInterval(() => {
-                const elapsed = Date.now() - colorChangeTime;
-                const progress = Math.max(0, 100 - (elapsed / currentColorDuration) * 100);
-                countdownProgress = progress;
-                updateCountdownBar();
-
-                if (progress <= 0) {
-                    clearInterval(countdownInterval);
-                }
-            }, 50);
-        }
-
-        // 更新倒计时进度条 
-        function updateCountdownBar() {
-            if (elements.countdownBar) {
-                elements.countdownBar.style.width = countdownProgress + '%';
-                // 根据进度改变颜色
-                if (countdownProgress > 60) {
-                    elements.countdownBar.className = 'bg-gradient-to-r from-green-400 to-blue-500 h-full rounded-full transition-all duration-100';
-                } else if (countdownProgress > 30) {
-                    elements.countdownBar.className = 'bg-gradient-to-r from-yellow-400 to-orange-500 h-full rounded-full transition-all duration-100';
-                } else {
-                    elements.countdownBar.className = 'bg-gradient-to-r from-red-400 to-pink-500 h-full rounded-full transition-all duration-100';
-                }
-            }
-        }
-
-        // 更新玩家颜色
-        function updatePlayerColor() {
-            elements.playerBottleLiquid.style.backgroundColor = colorMap[playerColor];
-            elements.playerBottleText.textContent = colorNames[playerColor] + '水';
-            elements.playerColorText.textContent = colorNames[playerColor] + '色';
-            elements.playerColorText.style.color = colorMap[playerColor];
-            elements.hintColor.textContent = colorNames[playerColor] + '色';
-        }
-
-        // 刷新玩家颜色（增加难度）
-        async function refreshPlayerColor() {
-            console.log('=== 开始刷新玩家瓶子颜色 ===');
-
-            try {
-                // 1. 先让旧瓶子消失
-                console.log('步骤1: 隐藏旧瓶子');
-                await hidePlayerBottle();
-
-                // 2. 随机选择一个新的颜色，确保与当前颜色不同
-                console.log('步骤2: 选择新颜色');
-                const availableColors = colors.filter(color => color !== playerColor);
-                const newColor = availableColors[Math.floor(Math.random() * availableColors.length)];
-
-                console.log(`旧颜色: ${playerColor}, 新颜色: ${newColor}`);
-
-                playerColor = newColor;
-                updatePlayerColor();
-
-                // 更新倒水动画的颜色
-                elements.pouringLiquid.style.backgroundColor = colorMap[playerColor];
-
-                // 3. 短暂延迟后显示新瓶子
-                console.log('步骤3: 准备显示新瓶子');
-                setTimeout(async () => {
-                    console.log('步骤4: 显示新瓶子');
-                    await showPlayerBottle();
-
-                    // 4. 显示新瓶子提示
-                    console.log('步骤5: 显示通知');
-                    showNewBottleNotification();
-
-
-                }, 100);
-
-            } catch (error) {
-                console.error('刷新瓶子颜色时出错:', error);
-            }
-        }
-
-
-
-        // 玩家瓶子消失动画
-        function hidePlayerBottle() {
-            return new Promise((resolve) => {
-                const container = elements.playerBottleContainer;
-                console.log('开始隐藏瓶子，容器元素:', container);
-                console.log('容器当前类名:', container ? container.className : 'null');
-
-                if (!container) {
-                    console.error('找不到玩家瓶子容器元素！');
-                    resolve();
-                    return;
-                }
-
-                // 强制触发重排，确保动画能被应用
-                container.offsetHeight;
-
-                container.classList.add('bottle-disappearing');
-                console.log('添加了消失动画类，新类名:', container.className);
-
-                // 动画完成后移除类并resolve
-                setTimeout(() => {
-                    container.classList.remove('bottle-disappearing');
-                    container.style.opacity = '0';
-                    console.log('瓶子消失动画完成，最终类名:', container.className);
-                    resolve();
-                }, 400); // 与CSS动画时间一致
-            });
-        }
-
-        // 玩家瓶子出现动画
-        function showPlayerBottle() {
-            return new Promise((resolve) => {
-                const container = elements.playerBottleContainer;
-                console.log('开始显示瓶子，容器元素:', container);
-
-                if (!container) {
-                    console.error('找不到玩家瓶子容器元素！');
-                    resolve();
-                    return;
-                }
-
-                const bottleElement = container.querySelector('.w-16.h-32');
-                console.log('瓶子元素:', bottleElement);
-
-                // 重置透明度并添加出现动画
-                container.style.opacity = '1';
-                container.classList.add('bottle-appearing');
-                console.log('添加了出现动画类');
-
-                // 添加闪光效果
-                if (bottleElement) {
-                    bottleElement.classList.add('bottle-shining');
-                    console.log('添加了闪光效果');
-                }
-
-                // 动画完成后清理类
-                setTimeout(() => {
-                    container.classList.remove('bottle-appearing');
-                    if (bottleElement) {
-                        bottleElement.classList.remove('bottle-shining');
-                    }
-                    console.log('瓶子出现动画完成');
-                    resolve();
-                }, 600); // 与CSS动画时间一致
-            });
-        }
-
-        // 显示新瓶子提示
-        function showNewBottleNotification() {
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-6 py-3 rounded-xl font-bold shadow-xl z-50';
-            notification.innerHTML = `
-                <div class="flex items-center gap-3">
-                    <div class="text-2xl">🆕</div>
-                    <span>新瓶子准备就绪！</span>
-                    <div class="text-2xl">✨</div>
-                </div>
-                `;
-
-            // 添加动画效果
-            notification.style.animation = 'bounce-scale 0.6s ease-out forwards';
-
-            document.body.appendChild(notification);
-
-            // 1.5秒后移除通知
-            setTimeout(() => {
-                notification.style.animation = 'fadeOut 0.4s ease-out forwards';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 400);
-            }, 1500);
-        }
-
-        // 处理屏幕点击事件
-        function handleScreenClick(event) {
-            if (gameState !== 'playing' || isAnimating) return;
-
-            // 立即保存点击时的颜色状态
-            const clickedLayerColor = currentLayerColor;
-            const clickedTargetColor = layerColors[currentLayer - 1];
-
-            // 停止颜色循环
-            stopColorCycling();
-
-            // 立即检查匹配结果
-            const isMatch = checkLayerMatchAtClick(clickedLayerColor, clickedTargetColor);
-
-            if (isMatch) {
-                // 显示倒水动画然后处理成功
-                showPouringAnimation();
-                setTimeout(() => {
-                    handleLayerSuccess();
-                }, 800); // 给用户时间看到爆炸特效和倒水动画
-            } else {
-                // 立即处理失败，不显示倒水动画
-                handleFailure(clickedLayerColor, clickedTargetColor);
-            }
-        }
-
-        // 显示倒水动画
-        function showPouringAnimation() {
-            isAnimating = true;
-            elements.pouringAnimation.classList.remove('hidden');
-            elements.pouringText.classList.remove('hidden');
-            elements.pouringLiquid.style.backgroundColor = colorMap[playerColor];
-        }
-
-        // 隐藏倒水动画
-        function hidePouringAnimation() {
-            elements.pouringAnimation.classList.add('hidden');
-            elements.pouringText.classList.add('hidden');
-        }
-
-        // 显示层级成功效果
-        function showLayerSuccessEffect(layerNum) {
-            const layerElement = document.getElementById(`layer-${layerNum}`);
-            if (!layerElement) return;
-
-            // 更新连击计数
-            const currentTime = Date.now();
-            if (currentTime - lastSuccessTime < 3000) {
-                // 3秒内算连击 
-                comboCount++;
-            } else {
-                comboCount = 1;
-            }
-            lastSuccessTime = currentTime;
-
-            // 添加成功动画类 
-            layerElement.classList.add('layer-success');
-
-            // 添加目标瓶震动效果
-            const targetBottle = elements.targetBottle;
-            targetBottle.classList.add('bottle-shake');
-
-            // 添加屏幕震动效果（连击时更强烈） 
-            const gameArea = document.getElementById('app');
-            gameArea.classList.add('screen-shake');
-
-            // 创建全屏成功闪光效果 
-            const flashEffect = document.createElement('div');
-            flashEffect.className = 'success-flash';
-            document.body.appendChild(flashEffect);
-
-            // 创建成功文字提示（包含连击信息） 
-            const successText = document.createElement('div');
-            successText.className = 'success-text';
-            let message = `第${layerNum}层完成！✨`;
-            if (comboCount > 1) {
-                message += ` ${comboCount}连击！`;
-                successText.style.color = '#f59e0b'; // 连击时使用金色
-                successText.style.fontSize = '16px';
-            }
-            successText.textContent = message;
-            successText.style.left = '50%';
-            successText.style.top = '50%';
-            successText.style.transform = 'translate(-50%, -50%)';
-            layerElement.appendChild(successText);
-
-            // 创建爆炸特效
-            createExplosionEffect(layerElement, comboCount > 1);
-
-            // 创建粒子爆炸效果（连击时更多粒子）
-            createSuccessParticles(layerElement, comboCount > 1);
-
-            // 添加积分提示（连击时额外积分）
-            showPointsGain(layerNum, comboCount);
-
-            // 清理动画类和元素
-            setTimeout(() => {
-                layerElement.classList.remove('layer-success');
-                targetBottle.classList.remove('bottle-shake');
-                gameArea.classList.remove('screen-shake');
-                if (successText.parentNode) {
-                    successText.parentNode.removeChild(successText);
-                }
-                if (flashEffect.parentNode) {
-                    flashEffect.parentNode.removeChild(flashEffect);
-                }
-            }, 2000);
-        }
-
-        // 创建爆炸特效
-        function createExplosionEffect(layerElement, isCombo = false) {
-            const explosionContainer = document.createElement('div');
-            explosionContainer.className = 'explosion-container';
-            layerElement.appendChild(explosionContainer);
-
-            // 创建爆炸波纹（连击时创建多个波纹）
-            const waveCount = isCombo ? 3 : 1;
-            for (let w = 0; w < waveCount; w++) {
-                const wave = document.createElement('div');
-                wave.className = 'explosion-wave';
-                wave.style.left = '50%';
-                wave.style.top = '50%';
-                wave.style.animationDelay = `${w * 0.1}s`;
-                if (isCombo) {
-                    wave.style.background = 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(251, 191, 36, 0.6) 30%, transparent 70%)';
-                    // 连击时波纹更大 
-                    wave.style.transform = `translate(-50%, -50%) scale(${1 + w * 0.3})`;
-                }
-                explosionContainer.appendChild(wave);
-            }
-            // 创建爆炸环 
-            const colors = isCombo ? ['#f59e0b', '#fbbf24', '#f97316'] : ['#22c55e', '#34d399', '#10b981'];
-            for (let i = 0; i < 3; i++) {
-                const ring = document.createElement('div');
-                ring.className = 'explosion-ring';
-                ring.style.left = '50%';
-                ring.style.top = '50%';
-                ring.style.borderColor = colors[i];
-                ring.style.animationDelay = `${i * 0.1}s`;
-                explosionContainer.appendChild(ring);
-            }
-
-            // 创建火花效果 
-            const sparkCount = isCombo ? 16 : 12;
-            for (let i = 0; i < sparkCount; i++) {
-                const spark = document.createElement('div');
-                spark.className = 'explosion-spark';
-                const angle = (i / sparkCount) * 2 * Math.PI;
-                const distance = 40 + Math.random() * 20;
-                const dx = Math.cos(angle) * distance;
-                const dy = Math.sin(angle) * distance;
-                const rotation = Math.random() * 360;
-                spark.style.setProperty('--spark-dx', `${dx}px`);
-                spark.style.setProperty('--spark-dy', `${dy}px`);
-                spark.style.setProperty('--spark-rotation', `${rotation}deg`);
-                spark.style.left = '50%';
-                spark.style.top = '50%';
-                spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                spark.style.animationDelay = `${Math.random() * 0.2}s`;
-                explosionContainer.appendChild(spark);
-            }
-
-            // 创建爆炸碎片 
-            const fragmentCount = isCombo ? 20 : 15;
-            for (let i = 0; i < fragmentCount; i++) {
-                const fragment = document.createElement('div');
-                fragment.className = 'explosion-fragment';
-                const angle = (i / fragmentCount) * 2 * Math.PI + Math.random() * 0.5;
-                const distance = 25 + Math.random() * 35;
-                const dx = Math.cos(angle) * distance;
-                const dy = Math.sin(angle) * distance;
-                const rotation = Math.random() * 720;
-                fragment.style.setProperty('--frag-dx', `${dx}px`);
-                fragment.style.setProperty('--frag-dy', `${dy}px`);
-                fragment.style.setProperty('--frag-rotation', `${rotation}deg`);
-                fragment.style.left = '50%';
-                fragment.style.top = '50%';
-                fragment.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                fragment.style.animationDelay = `${Math.random() * 0.3}s`;
-                explosionContainer.appendChild(fragment);
-            }
-
-            // 清理爆炸容器 
-            setTimeout(() => {
-                if (explosionContainer.parentNode) {
-                    explosionContainer.parentNode.removeChild(explosionContainer);
-                }
-            }, 1500);
-        }
-
-        // 创建成功粒子效果
-        function createSuccessParticles(layerElement, isCombo = false) {
-            const particleContainer = document.createElement('div');
-            particleContainer.className = 'success-particles';
-            layerElement.appendChild(particleContainer);
-
-            const colors = isCombo ?
-                ['#f59e0b', '#fbbf24', '#f97316', '#ea580c'] : // 连击时使用金色系
-                ['#22c55e', '#34d399', '#10b981', '#059669']; // 普通时使用绿色系
-            const particleCount = isCombo ? 18 : 12; // 连击时更多粒子
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'success-particle';
-                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)]; // 随机方向和距离
-                const angle = (i / particleCount) * 2 * Math.PI;
-                const distance = (isCombo ? 40 : 30) + Math.random() * 20;
-                const dx = Math.cos(angle) * distance;
-                const dy = Math.sin(angle) * distance;
-                particle.style.setProperty('--dx', `${dx}px`);
-                particle.style.setProperty('--dy', `${dy}px`);
-                particle.style.left = '50%';
-                particle.style.top = '50%';
-                particle.style.transform = 'translate(-50%, -50%)';
-
-                // 连击时粒子更大 
-                if (isCombo) {
-                    particle.style.width = '8px';
-                    particle.style.height = '8px';
-                }
-                particleContainer.appendChild(particle);
-            }
-
-            // 清理粒子容器 
-            setTimeout(() => {
-                if (particleContainer.parentNode) {
-                    particleContainer.parentNode.removeChild(particleContainer);
-                }
-            }, 1000);
-        }
-
-        // 显示积分获得提示
-        function showPointsGain(layerNum, combo = 1) {
-            let pointsGain = layerNum * 5; // 每层基础积分
-
-            // 连击奖励
-            if (combo > 1) {
-                pointsGain += combo * 2; // 连击额外积分
-            }
-
-            const pointsText = document.createElement('div');
-            pointsText.className = 'success-text';
-            let message = `+${pointsGain} 积分`;
-            if (combo > 1) {
-                message += ` (连击奖励!)`;
-                pointsText.style.color = '#f59e0b';
-                pointsText.style.fontSize = '14px';
-            } else {
-                pointsText.style.color = '#10b981';
-                pointsText.style.fontSize = '12px';
-            }
-            pointsText.textContent = message;
-            pointsText.style.left = '80%';
-            pointsText.style.top = '20%';
-            pointsText.style.transform = 'translateX(-50%)';
-
-            const targetBottle = elements.targetBottle;
-            targetBottle.appendChild(pointsText);
-
-            // 实际增加积分
-            points += pointsGain;
-            updatePointsDisplay();
-
-            // 清理元素
-            setTimeout(() => {
-                if (pointsText.parentNode) {
-                    pointsText.parentNode.removeChild(pointsText);
-                }
-            }, 2000);
-        }
-
-        // 显示下一层解锁效果
-        function showNextLayerUnlock(layerNum) {
-            const layerElement = document.getElementById(`layer-${layerNum}`);
-            if (!layerElement) return;
-
-            // 添加解锁动画类
-            layerElement.classList.add('layer-unlock');
-
-            // 创建解锁文字提示
-            const unlockText = document.createElement('div');
-            unlockText.className = 'success-text';
-            unlockText.textContent = `第${layerNum}层解锁！🔓`;
-            unlockText.style.left = '50%';
-            unlockText.style.top = '-20px';
-            unlockText.style.transform = 'translateX(-50%)';
-            unlockText.style.color = '#3b82f6';
-            unlockText.style.textShadow = '0 0 10px rgba(59, 130, 246, 0.5)';
-            layerElement.appendChild(unlockText);
-
-            // 创建解锁光环效果
-            const glowRing = document.createElement('div');
-            glowRing.style.position = 'absolute';
-            glowRing.style.top = '-5px';
-            glowRing.style.left = '-5px';
-            glowRing.style.right = '-5px';
-            glowRing.style.bottom = '-5px';
-            glowRing.style.border = '2px solid #3b82f6';
-            glowRing.style.borderRadius = '8px';
-            glowRing.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.6)';
-            glowRing.style.animation = 'layer-pulse 0.8s ease-out';
-            glowRing.style.pointerEvents = 'none';
-            layerElement.appendChild(glowRing);
-
-            // 清理动画类和元素
-            setTimeout(() => {
-                layerElement.classList.remove('layer-unlock');
-                if (unlockText.parentNode) {
-                    unlockText.parentNode.removeChild(unlockText);
-                }
-                if (glowRing.parentNode) {
-                    glowRing.parentNode.removeChild(glowRing);
-                }
-            }, 2000);
-        }
-
-        // 检查当前层匹配
-        function checkLayerMatch() {
-            // 核心匹配逻辑：
-            // 1. 当前层的颜色必须与玩家颜色匹配
-            // 2. 当前层的目标颜色必须与玩家颜色一致
-            // 3. 必须在正确的时机点击
-
-            const currentMatch = currentLayerColor === playerColor;
-            const targetMatch = layerColors[currentLayer - 1] === playerColor;
-
-            // 只有当前显示的颜色与玩家颜色匹配，且当前层的目标颜色也与玩家颜色匹配时才成功
-            return currentMatch && targetMatch;
-        }
-
-        // 检查点击时的层匹配（使用点击时保存的颜色状态）
-        function checkLayerMatchAtClick(clickedLayerColor, clickedTargetColor) {
-            // 核心匹配逻辑：
-            // 根据游戏规则，只需要点击时当前层显示的颜色与玩家颜色匹配即可
-            // 目标层的固定颜色不影响匹配判断
-
-            const currentMatch = clickedLayerColor === playerColor;
-
-            console.log('点击匹配检查:', {
-                clickedLayerColor,
-                clickedTargetColor,
-                playerColor,
-                currentMatch,
-                result: currentMatch
-            });
-
-            // 只要当前显示的颜色与玩家颜色匹配就成功
-            return currentMatch;
-        }
-
-        // 处理层级成功
-        function handleLayerSuccess() {
-            // 隐藏倒水动画
-            hidePouringAnimation();
-
-            // 记录当前层成功时的颜色（玩家颜色）
-            completedLayerColors[currentLayer - 1] = playerColor;
-
-            console.log(`第${currentLayer}层成功，固定为${playerColor}色`, {
-                completedLayerColors: [...completedLayerColors]
-            });
-
-            // 添加当前层的成功视觉反馈
-            showLayerSuccessEffect(currentLayer);
-
-            // 当前层成功，检查是否完成所有层
-            if (currentLayer >= 2) {
-                // 两层全部完成，游戏胜利
-                setTimeout(() => {
-                    handleGameSuccess();
-                }, 1500); // 给用户足够时间看到最终成功特效
-            } else {
-                // 进入下一层
-                setTimeout(() => {
-                    currentLayer++;
-                    showNextLayerUnlock(currentLayer);
-                    updateLayerDisplay();
-
-                    // 短暂延迟后继续下一层的挑战
-                    setTimeout(async () => {
-                        // 每次完成匹配后刷新玩家瓶子的颜色，增加难度
-                        await refreshPlayerColor();
-
-                        // 等待瓶子动画完成后再继续游戏
-                        setTimeout(() => {
-                            // 重置颜色循环从第一个颜色开始
-                            colorIndex = 0;
-                            currentLayerColor = colors[0];
-
-                            isAnimating = false;
-                            startColorCycling();
-                            resetCountdown();
-                        }, 400); // 给瓶子动画足够时间完成
-                    }, 400); // 给用户时间看到解锁动画
-                }, 1500); // 给用户足够时间看到成功特效和积分提示
-            }
-        }
-
-        // 处理游戏完全成功（四层全部完成）
-        function handleGameSuccess() {
-            gameState = 'success';
-
-            // 生成奖励
-            reward = generateReward();
-            points += reward.amount;
-            updatePointsDisplay();
-
-            // 显示彩带效果
-            showConfettiEffect();
-
-            // 延迟显示礼盒动画
-            setTimeout(() => {
-                showGiftBoxAnimation();
-            }, 500);
-
-            // 点击礼盒开启
-            setTimeout(() => {
-                const giftBoxClosed = document.getElementById('gift-box-closed');
-                giftBoxClosed.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    if (!giftBoxClosed.classList.contains('hidden')) {
-                        openGiftBox();
-                    }
-                }, { once: true });
-            }, 1000);
-        }
-
-        // 处理失败
-        function handleFailure(clickedLayerColor = null, clickedTargetColor = null) {
-            gameState = 'failed';
-
-            // 隐藏倒水动画
-            hidePouringAnimation();
-
-            // 显示失败界面
-            elements.failedOverlay.classList.remove('hidden');
-
-            // 使用点击时的颜色状态，如果没有传入则使用当前状态
-            const targetColor = clickedTargetColor || layerColors[currentLayer - 1];
-            const displayColor = clickedLayerColor || currentLayerColor;
-
-            // 获取失败消息元素
-            const failedMessage = document.getElementById('failed-message');
-            const targetColorElement = document.getElementById('target-color-failed');
-            const playerColorElement = document.getElementById('player-color-failed');
-
-            // 更新失败信息（使用现有的span元素）
-            if (targetColorElement) {
-                targetColorElement.textContent = colorNames[targetColor] + '色';
-                targetColorElement.style.color = colorMap[targetColor];
-            }
-            if (playerColorElement) {
-                playerColorElement.textContent = colorNames[playerColor] + '色';
-                playerColorElement.style.color = colorMap[playerColor];
-            }
-
-            // 更新失败消息 - 根据新的匹配规则
-            if (failedMessage) {
-                // 现在只有一种失败情况：时机不对
-                failedMessage.innerHTML = `时机不对！需要等第${currentLayer}层变成<span class="font-bold"
-                                style="color: ${colorMap[playerColor]}">${colorNames[playerColor]}色</span>时点击，但你在<span
-                                class="font-bold"
-                                style="color: ${colorMap[displayColor]}">${colorNames[displayColor]}色</span>时点击了`;
-            }
-
-
-        }
-
-        // 生成奖励
-        function generateReward() {
-            const rand = Math.random();
-            if (rand < 0.35) return rewards[0]; // 35% - 1 积分 
-            if (rand < 0.60) return rewards[1]; // 25% - 10 积分 
-            if (rand < 0.75) return rewards[2]; // 15% - 18 积分 
-            if (rand < 0.85) return rewards[3]; // 10% - 38 积分 
-            if (rand < 0.93) return rewards[4]; // 8% - 88 积分 
-            if (rand < 0.98) return rewards[5]; // 5% - 188 积分 
-            return rewards[6]; // 2% - 388 积分 
-        }
-
-        // 显示彩带效果 - 从目标瓶子位置爆开 
-        function showConfettiEffect() {
-            elements.confettiContainer.classList.remove('hidden');
-
-            // 获取目标瓶子的位置 
-            const targetBottle = elements.targetBottle;
-            const bottleRect = targetBottle.getBoundingClientRect();
-            const containerRect = elements.confettiContainer.getBoundingClientRect();
-
-            // 计算目标瓶子在容器中的相对位置
-            const centerX = (bottleRect.left + bottleRect.width / 2 - containerRect.left) / containerRect.width * 100;
-            const centerY = (bottleRect.top + bottleRect.height / 2 - containerRect.top) / containerRect.height * 100;
-
-            // 创建彩带片段，从瓶子位置爆开 
-            for (let i = 0; i < 40; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti-piece';
-
-                // 随机颜色 
-                const colorIndex = Math.floor(Math.random() * colors.length);
-                const colorValue = colorMap[colors[colorIndex]];
-                confetti.style.backgroundColor = colorValue;
-
-                // 从瓶子中心位置开始 
-                confetti.style.left = centerX + '%';
-                confetti.style.top = centerY + '%';
-
-                // 随机爆炸方向和距离 
-                const angle = (Math.PI * 2 * i) / 40 + (Math.random() - 0.5) * 0.5;
-                const distance = 50 + Math.random() * 100;
-                const endX = centerX + Math.cos(angle) * distance / containerRect.width * 100;
-                const endY = centerY + Math.sin(angle) * distance / containerRect.height * 100 + Math.random() * 50;
-
-                // 设置CSS变量用于动画
-                confetti.style.setProperty('--end-x', endX + '%');
-                confetti.style.setProperty('--end-y', endY + '%');
-                confetti.style.setProperty('--rotation', Math.random() * 720 + 'deg');
-                confetti.style.animationDelay = Math.random() * 0.3 + 's';
-                confetti.style.animation = 'confettiBurst 2s ease-out forwards';
-                elements.confettiContainer.appendChild(confetti);
-            }
-
-            // 2秒后清理彩带 
-            setTimeout(() => {
-                elements.confettiContainer.innerHTML = '';
-                elements.confettiContainer.classList.add('hidden');
-            }, 2000);
-        }
-
-        // 显示礼盒动画
-        function showGiftBoxAnimation() {
-            elements.giftBoxContainer.classList.remove('hidden');
-            // 移除pointer-events-none以允许点击
-            elements.giftBoxContainer.classList.remove('pointer-events-none');
-            // 显示关闭的礼盒
-            document.getElementById('gift-box-closed').classList.remove('hidden');
-            document.getElementById('gift-box-opened').classList.add('hidden');
-
-            // 开始3秒倒计时
-            startGiftBoxCountdown();
-        }
-
-        // 礼盒倒计时功能
-        let countdownTimer = null;
-        let countdownSeconds = 3;
-
-        function startGiftBoxCountdown() {
-            countdownSeconds = 3;
-            const countdownText = document.getElementById('countdown-text');
-
-            // 清除之前的计时器
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-            }
-
-            // 更新倒计时显示
-            countdownText.textContent = countdownSeconds;
-
-            countdownTimer = setInterval(() => {
-                countdownSeconds--;
-                countdownText.textContent = countdownSeconds;
-
-                if (countdownSeconds <= 0) {
-                    clearInterval(countdownTimer);
-                    countdownTimer = null;
-                    // 自动开启礼盒 
-                    openGiftBox();
-                }
-            }, 1000);
-        }
-
-        function stopGiftBoxCountdown() {
-            if (countdownTimer) {
-                clearInterval(countdownTimer);
-                countdownTimer = null;
-            }
-        }
-
-        // 开启礼盒
-        function openGiftBox() {
-            // 停止倒计时 
-            stopGiftBoxCountdown();
-
-            if (reward) {
-                const rewardText = `+${reward.amount} 积分!`;
-                document.getElementById('flying-reward').querySelector('div').textContent = rewardText;
-
-                // 切换到开启状态 
-                document.getElementById('gift-box-closed').classList.add('hidden');
-                document.getElementById('gift-box-opened').classList.remove('hidden');
-
-                // 2秒后隐藏礼盒，显示奖励界面 
-                setTimeout(() => {
-                    hideGiftBoxAnimation();
-                    showRewardOverlay();
-                }, 2000);
-            }
-        }
-
-        // 隐藏礼盒动画
-        function hideGiftBoxAnimation() {
-            // 停止倒计时
-            stopGiftBoxCountdown();
-
-            elements.giftBoxContainer.classList.add('hidden');
-            // 恢复pointer-events-none
-            elements.giftBoxContainer.classList.add('pointer-events-none');
-            // 重置礼盒状态
-            document.getElementById('gift-box-closed').classList.remove('hidden');
-            document.getElementById('gift-box-opened').classList.add('hidden');
-        }
-
-        // 显示奖励界面
-        function showRewardOverlay() {
-            gameState = 'reward';
-
-            // 更新奖励显示
-            const rewardElement = elements.rewardDisplay.querySelector('span');
-            rewardElement.textContent = reward.name;
-
-            // 根据奖励稀有度设置颜色
-            const rewardContainer = elements.rewardDisplay;
-            switch (reward.rarity) {
-                case 'common':
-                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-gray-400 to-gray-600 text-white mb-6 shadow-lg';
-                    break;
-                case 'rare':
-                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-blue-400 to-blue-600 text-white mb-6 shadow-lg';
-                    break;
-                case 'epic':
-                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-purple-400 to-purple-600 text-white mb-6 shadow-lg';
-                    break;
-                case 'legendary':
-                    rewardContainer.className = 'inline-flex items-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-white mb-6 shadow-lg';
-                    break;
-            }
-
-            elements.rewardOverlay.classList.remove('hidden');
-        }
-
-        // 重置游戏
-        function resetGame() {
-            gameState = 'waiting';
-            isAnimating = false;
-            showChest = false;
-            chestOpened = false;
-            reward = null;
-            showConfetti = false;
-            showGiftBox = false;
-
-            stopColorCycling();
-
-            // 隐藏所有覆盖层
-            elements.failedOverlay.classList.add('hidden');
-            elements.rewardOverlay.classList.add('hidden');
-            elements.gameHint.classList.add('hidden');
-            elements.clickHint.classList.add('hidden');
-            elements.colorIndicator.classList.add('hidden');
-
-            // 显示等待界面
-            elements.waitingOverlay.classList.remove('hidden');
-            elements.gameArea.style.cursor = 'default';
-
-            // 重置游戏状态
-            currentLayer = 1;
-            playerColor = 'red';
-            layerColors = ['red', 'yellow'];
-            completedLayerColors = []; // 重置已完成层的颜色记录
-            // 从第一个颜色开始正常循环
-            colorIndex = 0;
-            currentLayerColor = colors[0];
-            comboCount = 0;
-            lastSuccessTime = 0;
-            updatePlayerColor();
-            initializeLayerVisibility();
-            updateLayerDisplay();
-            updateColorIndicator();
-
-            // 更新开始按钮状态
+        // 更新开始按钮状态
+        function updateStartButtonState() {
             if (points >= 10) {
                 elements.startBtn.disabled = false;
                 elements.startBtn.className = 'px-8 py-3 rounded-xl font-bold transition-all bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white shadow-lg';
@@ -2142,120 +642,628 @@
             }
         }
 
-        // 再次挑战（直接开始新游戏）
+        // 更新重试按钮状态
+        function updateRetryButtonState() {
+            if (points >= 10) {
+                elements.retryBtn.disabled = false;
+                elements.retryBtn.className = 'px-8 py-3 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-xl font-bold transition-all shadow-lg';
+                elements.retryBtn.textContent = '再试一次 (-10积分)';
+            } else {
+                elements.retryBtn.disabled = true;
+                elements.retryBtn.className = 'px-8 py-3 bg-gray-300 text-gray-500 rounded-xl font-bold cursor-not-allowed';
+                elements.retryBtn.textContent = '积分不足';
+            }
+        }
+
+        // 开始游戏
+        function startGame() {
+            if (points < 10) {
+                showToast('积分不足，无法开始挑战！');
+                return;
+            }
+
+            console.log('Starting game...');
+            points -= 10;
+            updatePointsDisplay();
+
+            // 清理之前的定时器
+            if (colorTimer) {
+                clearTimeout(colorTimer);
+                colorTimer = null;
+            }
+            if (countdownTimer) {
+                clearInterval(countdownTimer);
+                countdownTimer = null;
+            }
+
+            // 随机化玩家瓶颜色
+            randomizePlayerColor();
+
+            // 重置游戏状态
+            gameState = 'playing';
+            currentLayer = 1;
+            completedLayerColors = [];
+            colorIndex = 0;
+            currentLayerColor = colors[colorIndex];
+            isAnimating = false;  // 重置动画状态
+
+            // 隐藏等待覆盖层
+            elements.waitingOverlay.classList.add('hidden');
+
+            // 显示游戏UI
+            elements.gameHint.classList.remove('hidden');
+            elements.clickHint.classList.remove('hidden');
+            elements.colorIndicator.classList.remove('hidden');
+
+            // 随机生成两层目标颜色
+            layerColors = [
+                colors[Math.floor(Math.random() * colors.length)],
+                colors[Math.floor(Math.random() * colors.length)]
+            ];
+
+            // 重置层显示
+            elements.layer1.classList.remove('hidden');
+            elements.layer2.classList.add('hidden');
+            elements.layerProgress.textContent = '1/2';
+
+            // 确保层级定位正确
+            elements.layer1.style.position = 'absolute';
+            elements.layer1.style.bottom = '0px';
+            elements.layer1.style.height = '40px';
+            elements.layer2.style.position = 'absolute';
+            elements.layer2.style.bottom = '40px';
+            elements.layer2.style.height = '40px';
+
+            // 设置初始颜色后再更新层级显示
+            elements.layer1.style.backgroundColor = colorMap[currentLayerColor];
+            
+            // 更新层级显示
+            updateLayerDisplay();
+
+            // 更新提示
+            updateGameHint();
+
+            // 开始颜色循环
+            startColorCycle();
+
+            console.log('Game started successfully');
+        }
+
+        // 更新游戏提示
+        function updateGameHint() {
+            elements.currentLayerHint.textContent = currentLayer;
+            elements.hintColor.textContent = colorNames[playerColor];
+            elements.hintColor.style.color = colorMap[playerColor];
+        }
+
+        // 智能时间控制系统
+        function getCurrentColorDuration() {
+            if (currentLayerColor === playerColor) {
+                return 1000; // 匹配颜色显示1秒
+            } else {
+                return 500;  // 非匹配颜色显示0.5秒
+            }
+        }
+
+        // 开始颜色循环
+        function startColorCycle() {
+            if (colorTimer) {
+                clearTimeout(colorTimer);
+            }
+
+            // 初始化进度条
+            elements.countdownBar.style.width = '100%';
+
+            function cycleColor() {
+                if (gameState !== 'playing') return;
+
+                // 切换到下一个颜色
+                colorIndex = (colorIndex + 1) % colors.length;
+                currentLayerColor = colors[colorIndex];
+
+                // 更新当前层的颜色
+                const currentLayerElement = currentLayer === 1 ? elements.layer1 : elements.layer2;
+                currentLayerElement.style.backgroundColor = colorMap[currentLayerColor];
+
+                // 更新颜色指示器
+                updateColorIndicator();
+
+                // 重置进度条动画
+                const duration = getCurrentColorDuration();
+                startCountdownAnimation(duration);
+
+                console.log('Color changed to:', currentLayerColor, 'Duration:', duration + 'ms');
+
+                // 使用智能时间控制设置下次切换
+                colorTimer = setTimeout(cycleColor, duration);
+            }
+
+            // 开始第一次倒计时动画
+            const initialDuration = getCurrentColorDuration();
+            startCountdownAnimation(initialDuration);
+            colorTimer = setTimeout(cycleColor, initialDuration);
+        }
+
+        // 开始倒计时动画（支持动态时长）
+        function startCountdownAnimation(duration = 2000) {
+            // 重置进度条到100%
+            elements.countdownBar.style.width = '100%';
+
+            // 使用requestAnimationFrame创建平滑动画
+            let startTime = null;
+
+            function animate(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // 计算当前宽度（从100%到0%）
+                const width = (1 - progress) * 100;
+                elements.countdownBar.style.width = width + '%';
+
+                // 如果动画未完成且游戏仍在进行，继续动画
+                if (progress < 1 && gameState === 'playing') {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        // 层级状态管理
+        function updateLayerDisplay() {
+            console.log('Updating layer display - currentLayer:', currentLayer, 'completedLayerColors:', completedLayerColors);
+            
+            // 确保层级定位始终正确
+            elements.layer1.style.position = 'absolute';
+            elements.layer1.style.bottom = '0px';
+            elements.layer1.style.height = '40px';
+            elements.layer2.style.position = 'absolute';
+            elements.layer2.style.bottom = '40px';
+            elements.layer2.style.height = '40px';
+            
+            // 第一层状态
+            if (currentLayer > 1) {
+                // 已完成层：绿色边框 + 固定颜色 + 移除动画
+                elements.layer1.style.borderColor = '#10b981';
+                elements.layer1.style.borderWidth = '3px';
+                elements.layer1.style.backgroundColor = colorMap[completedLayerColors[0]];
+                elements.layer1.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.5)';
+                elements.layer1.style.animation = 'none';
+                elements.layer1.style.opacity = '1';
+                // 再次确保定位正确
+                elements.layer1.style.bottom = '0px';
+                elements.layer1.style.height = '40px';
+            } else {
+                // 当前挑战层：金色边框 + 变化颜色 + 动画效果
+                elements.layer1.style.borderColor = '#f59e0b';
+                elements.layer1.style.borderWidth = '3px';
+                elements.layer1.style.backgroundColor = colorMap[currentLayerColor];
+                elements.layer1.style.boxShadow = '0 0 15px rgba(251, 191, 36, 0.5)';
+                elements.layer1.style.animation = 'layer-pulse 1s ease-in-out infinite alternate';
+                elements.layer1.style.opacity = '1';
+                // 再次确保定位正确
+                elements.layer1.style.bottom = '0px';
+                elements.layer1.style.height = '40px';
+            }
+
+            // 第二层状态
+            if (currentLayer > 2) {
+                // 已完成层：绿色边框 + 固定颜色
+                elements.layer2.style.borderColor = '#10b981';
+                elements.layer2.style.borderWidth = '3px';
+                elements.layer2.style.backgroundColor = colorMap[completedLayerColors[1]];
+                elements.layer2.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.5)';
+                elements.layer2.style.animation = 'none';
+                elements.layer2.style.opacity = '1';
+                // 再次确保定位正确
+                elements.layer2.style.bottom = '40px';
+                elements.layer2.style.height = '40px';
+            } else if (currentLayer === 2) {
+                // 当前挑战层：金色边框 + 变化颜色 + 动画效果
+                elements.layer2.style.borderColor = '#f59e0b';
+                elements.layer2.style.borderWidth = '3px';
+                elements.layer2.style.backgroundColor = colorMap[currentLayerColor];
+                elements.layer2.style.boxShadow = '0 0 15px rgba(251, 191, 36, 0.5)';
+                elements.layer2.style.animation = 'layer-pulse 1s ease-in-out infinite alternate';
+                elements.layer2.style.opacity = '1';
+                // 确保第二层可见
+                elements.layer2.classList.remove('hidden');
+                // 再次确保定位正确
+                elements.layer2.style.bottom = '40px';
+                elements.layer2.style.height = '40px';
+            } else {
+                // 未到达层：保持隐藏
+                elements.layer2.classList.add('hidden');
+            }
+        }
+
+        // 更新颜色指示器
+        function updateColorIndicator() {
+            colors.forEach((color, index) => {
+                const indicator = document.getElementById(`color-${color}`);
+                if (color === currentLayerColor) {
+                    indicator.className = 'w-4 h-4 rounded-full border-2 transition-all duration-200 scale-125 border-white shadow-lg';
+                    indicator.style.opacity = '1';
+                } else {
+                    indicator.className = 'w-4 h-4 rounded-full border-2 transition-all duration-200 scale-100 border-gray-400 opacity-60';
+                }
+            });
+        }
+
+        // 颜色匹配逻辑
+        function checkLayerMatch() {
+            // 简化逻辑：只要当前显示颜色与玩家颜色匹配就成功
+            // 这样确保游戏是可以完成的
+            return currentLayerColor === playerColor;
+        }
+
+        // 处理屏幕点击事件
+        function handleScreenClick(event) {
+            if (gameState !== 'playing' || isAnimating) return;
+
+            console.log('Screen clicked! Player color:', playerColor, 'Current layer color:', currentLayerColor, 'Target layer color:', layerColors[currentLayer - 1]);
+
+            // 使用双重验证检查匹配
+            if (checkLayerMatch()) {
+                // 成功匹配
+                handleSuccessfulMatch();
+            } else {
+                // 匹配失败
+                handleFailedMatch();
+            }
+        }
+
+        // 处理成功匹配
+        function handleSuccessfulMatch() {
+            isAnimating = true;
+
+            // 停止颜色循环
+            if (colorTimer) {
+                clearTimeout(colorTimer);
+                colorTimer = null;
+            }
+
+            // 显示倒水动画
+            showPouringAnimation();
+
+            // 记录完成的层颜色
+            completedLayerColors.push(currentLayerColor);
+
+            setTimeout(() => {
+                if (currentLayer === 1) {
+                    // 完成第一层，进入第二层
+                    currentLayer = 2;
+                    elements.layerProgress.textContent = '2/2';
+
+                    // 刷新玩家瓶颜色（动态难度系统）
+                    refreshPlayerColor();
+                    updateGameHint();
+
+                    // 重新开始颜色循环
+                    colorIndex = 0;
+                    currentLayerColor = colors[colorIndex];
+                    
+                    // 更新层级显示（在设置颜色之后）
+                    updateLayerDisplay();
+                    
+                    // 更新颜色指示器
+                    updateColorIndicator();
+
+                    isAnimating = false;
+                    startColorCycle();
+
+                    console.log('Layer 1 completed, moving to layer 2');
+                } else {
+                    // 完成第二层，游戏胜利
+                    gameState = 'completed';
+                    showVictorySequence();
+                    console.log('Game completed successfully!');
+                }
+            }, 1800); // 增加到1800ms以适应新的动画时长
+        }
+
+        // 处理匹配失败
+        function handleFailedMatch() {
+            gameState = 'failed';
+
+            // 停止颜色循环
+            if (colorTimer) {
+                clearTimeout(colorTimer);
+                colorTimer = null;
+            }
+
+            // 更新失败消息
+            elements.targetColorFailed.textContent = colorNames[currentLayerColor];
+            elements.targetColorFailed.style.color = colorMap[currentLayerColor];
+            elements.playerColorFailed.textContent = colorNames[playerColor];
+            elements.playerColorFailed.style.color = colorMap[playerColor];
+
+            // 显示失败覆盖层
+            elements.failedOverlay.classList.remove('hidden');
+
+            // 隐藏游戏UI
+            elements.gameHint.classList.add('hidden');
+            elements.clickHint.classList.add('hidden');
+            elements.colorIndicator.classList.add('hidden');
+
+            // 更新重试按钮状态
+            updateRetryButtonState();
+
+            console.log('Game failed - color mismatch');
+        }
+
+        // 显示倒水动画
+        function showPouringAnimation() {
+            const playerBottleContainer = document.getElementById('player-bottle-container');
+            
+            // 第一阶段：移动到目标位置 (600ms)
+            playerBottleContainer.style.animation = 'bottle-move-to-target 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+            
+            setTimeout(() => {
+                // 第二阶段：开始倒水动画 (400ms)
+                playerBottleContainer.style.animation = 'bottle-pour 0.4s ease-in-out forwards';
+                
+                // 显示倒水液体效果
+                elements.pouringAnimation.classList.remove('hidden');
+                elements.pouringText.classList.remove('hidden');
+                
+                // 动态计算倒水位置
+                const targetBottleRect = elements.targetBottle.getBoundingClientRect();
+                const gameAreaRect = elements.gameArea.getBoundingClientRect();
+                
+                const relativeLeft = ((targetBottleRect.left - gameAreaRect.left) / gameAreaRect.width) * 100;
+                const relativeTop = ((targetBottleRect.top - gameAreaRect.top) / gameAreaRect.height) * 100;
+                
+                elements.pouringAnimation.style.left = relativeLeft + '%';
+                elements.pouringAnimation.style.top = (relativeTop - 5) + '%';
+                elements.pouringAnimation.style.transform = 'translateX(-50%)';
+                
+                // 添加液体流动动画
+                elements.pouringLiquid.style.animation = 'liquid-pour 0.8s ease-out forwards';
+                
+                // 在液体开始流动后200ms显示成功提示（更符合视觉逻辑）
+                setTimeout(() => {
+                    showSuccessText();
+                }, 200);
+                
+                setTimeout(() => {
+                    // 第三阶段：回到初始位置 (500ms)
+                    playerBottleContainer.style.animation = 'bottle-return 0.5s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards';
+                    
+                    // 隐藏倒水效果
+                    elements.pouringAnimation.classList.add('hidden');
+                    elements.pouringText.classList.add('hidden');
+                    
+                    setTimeout(() => {
+                        // 清除动画样式，确保瓶子回到初始状态
+                        playerBottleContainer.style.animation = '';
+                        elements.pouringLiquid.style.animation = '';
+                    }, 500);
+                }, 400);
+            }, 600);
+        }
+
+        // 显示成功文本反馈
+        function showSuccessText() {
+            const currentLayerElement = currentLayer === 1 ? elements.layer1 : elements.layer2;
+            const successText = document.createElement('div');
+            successText.className = 'success-text';
+            successText.textContent = '成功！';
+            // 不要改变层级元素的position，保持absolute定位
+            // currentLayerElement.style.position = 'relative'; // 删除这行
+            currentLayerElement.appendChild(successText);
+            
+            setTimeout(() => {
+                if (successText.parentNode) {
+                    successText.parentNode.removeChild(successText);
+                }
+            }, 2000);
+        }
+
+        // 显示胜利序列
+        function showVictorySequence() {
+            // 隐藏游戏UI
+            elements.gameHint.classList.add('hidden');
+            elements.clickHint.classList.add('hidden');
+            elements.colorIndicator.classList.add('hidden');
+
+            // 生成奖励
+            reward = generateReward();
+
+            // 显示礼盒动画
+            showGiftBoxAnimation();
+        }
+
+        // 生成奖励
+        function generateReward() {
+            const rand = Math.random();
+            if (rand < 0.35) return rewards[0]; // 35% - 1 积分
+            if (rand < 0.60) return rewards[1]; // 25% - 10 积分
+            if (rand < 0.75) return rewards[2]; // 15% - 18 积分
+            if (rand < 0.85) return rewards[3]; // 10% - 38 积分
+            if (rand < 0.93) return rewards[4]; // 8% - 88 积分
+            if (rand < 0.98) return rewards[5]; // 5% - 188 积分
+            return rewards[6]; // 2% - 388 积分
+        }
+
+        // 显示礼盒动画
+        function showGiftBoxAnimation() {
+            elements.giftBoxContainer.classList.remove('hidden');
+            elements.giftBoxContainer.style.pointerEvents = 'auto';
+
+            // 3秒后自动开启
+            let countdownSeconds = 3;
+            const countdownText = document.getElementById('countdown-text');
+
+            countdownTimer = setInterval(() => {
+                countdownSeconds--;
+                countdownText.textContent = countdownSeconds;
+
+                if (countdownSeconds <= 0) {
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                    openGiftBox();
+                }
+            }, 1000);
+
+            // 点击开启
+            const giftBoxClosed = document.getElementById('gift-box-closed');
+            giftBoxClosed.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                    openGiftBox();
+                }
+            });
+        }
+
+        // 开启礼盒
+        function openGiftBox() {
+            if (reward) {
+                const rewardText = `+${reward.amount} 积分!`;
+                // 更新奖励文本显示
+                const rewardTextElement = document.getElementById('flying-reward').querySelector('div div:last-child');
+                rewardTextElement.textContent = rewardText;
+
+                // 切换到开启状态
+                document.getElementById('gift-box-closed').classList.add('hidden');
+                document.getElementById('gift-box-opened').classList.remove('hidden');
+                document.getElementById('flying-reward').classList.remove('hidden');
+
+                // 显示彩带效果
+                showConfettiEffect();
+
+                // 2秒后显示奖励界面
+                setTimeout(() => {
+                    hideGiftBoxAnimation();
+                    showRewardOverlay();
+                }, 2000);
+            }
+        }
+
+        // 隐藏礼盒动画
+        function hideGiftBoxAnimation() {
+            elements.giftBoxContainer.classList.add('hidden');
+            elements.giftBoxContainer.style.pointerEvents = 'none';
+        }
+
+        // 显示奖励覆盖层
+        function showRewardOverlay() {
+            if (reward) {
+                // 更新奖励显示
+                elements.rewardDisplay.innerHTML = `
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-3 rounded-full font-bold text-xl shadow-lg border-2 border-yellow-300">
+                        +${reward.amount} 积分!
+                    </div>
+                `;
+
+                // 增加积分
+                points += reward.amount;
+                updatePointsDisplay();
+
+                // 显示奖励覆盖层
+                elements.rewardOverlay.classList.remove('hidden');
+            }
+        }
+
+        // 显示彩带效果
+        function showConfettiEffect() {
+            elements.confettiContainer.classList.remove('hidden');
+
+            // 获取目标瓶子的位置
+            const targetBottle = elements.targetBottle;
+            const bottleRect = targetBottle.getBoundingClientRect();
+            const containerRect = elements.confettiContainer.getBoundingClientRect();
+
+            // 计算目标瓶子在容器中的相对位置
+            const centerX = (bottleRect.left + bottleRect.width / 2 - containerRect.left) / containerRect.width * 100;
+            const centerY = (bottleRect.top + bottleRect.height / 2 - containerRect.top) / containerRect.height * 100;
+
+            // 创建彩带片段
+            for (let i = 0; i < 40; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti-piece';
+
+                // 随机颜色
+                const colorIndex = Math.floor(Math.random() * colors.length);
+                const colorValue = colorMap[colors[colorIndex]];
+                confetti.style.backgroundColor = colorValue;
+
+                // 从瓶子中心位置开始
+                confetti.style.left = centerX + '%';
+                confetti.style.top = centerY + '%';
+
+                // 随机爆炸方向和距离
+                const angle = (Math.PI * 2 * i) / 40 + (Math.random() - 0.5) * 0.5;
+                const distance = 50 + Math.random() * 100;
+                const endX = centerX + Math.cos(angle) * distance / containerRect.width * 100;
+                const endY = centerY + Math.sin(angle) * distance / containerRect.height * 100 + Math.random() * 50;
+
+                // 设置CSS变量用于动画
+                confetti.style.setProperty('--end-x', endX + '%');
+                confetti.style.setProperty('--end-y', endY + '%');
+                confetti.style.setProperty('--rotation', Math.random() * 720 + 'deg');
+                confetti.style.animationDelay = Math.random() * 0.3 + 's';
+                confetti.style.animation = 'confettiBurst 2s ease-out forwards';
+
+                elements.confettiContainer.appendChild(confetti);
+            }
+
+            // 2秒后清理彩带
+            setTimeout(() => {
+                elements.confettiContainer.innerHTML = '';
+                elements.confettiContainer.classList.add('hidden');
+            }, 2000);
+        }
+
+        // 重置游戏
+        function resetGame() {
+            if (points < 10) {
+                showToast('积分不足，无法重新开始！');
+                return;
+            }
+
+            // 隐藏失败覆盖层
+            elements.failedOverlay.classList.add('hidden');
+
+            // 重新开始游戏
+            startGame();
+        }
+
+        // 开始新挑战
         function startNewChallenge() {
             if (points < 10) {
                 showToast('积分不足，无法开始挑战！');
                 return;
             }
+
             // 隐藏奖励界面
             elements.rewardOverlay.classList.add('hidden');
-            // 直接开始新游戏 
+
+            // 重新开始游戏
             startGame();
         }
 
-        // 分享功能 
+        // 分享结果
         function shareResult() {
-            const shareText = `🎉 我在幸运一滴游戏中获得了${reward.name}！当前积分：${points} 分！快来挑战吧！`;
-            const shareUrl = window.location.href;
+            if (reward) {
+                const shareText = `🎉 我在幸运一滴游戏中获得了${reward.name}！当前积分：${points} 分！快来挑战吧！`;
 
-            // 创建分享选项弹窗 
-            const shareModal = document.createElement('div');
-            shareModal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
-            shareModal.innerHTML = `
-                <div class="bg-white rounded-2xl p-6 mx-4 max-w-sm w-full">
-                    <h3 class="text-lg font-bold mb-4 text-center">分享到</h3>
-                    <div class="space-y-3">
-                                            <button onclick="shareToWeChat()"
-                                                class="w-full flex items-center gap-3 p-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path
-                                                        d="M8.5 12.5c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5 1.5.7 1.5 1.5zm7 0c0 .8-.7 1.5-1.5 1.5s-1.5-.7-1.5-1.5.7-1.5 1.5-1.5 1.5.7 1.5 1.5z" />
-                                                    <path
-                                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-4-4h3V9h2v4h3l-4 4z" />
-                                                </svg>
-                                                微信好友
-                                            </button>
-                                            <button onclick="shareToWeibo()"
-                                                class="w-full flex items-center gap-3 p-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition-all">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path
-                                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                                                </svg>
-                                                微博
-                                            </button>
-                                            <button onclick="shareToQQ()"
-                                                class="w-full flex items-center gap-3 p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl transition-all">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path
-                                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
-                                                </svg>
-                                                QQ空间
-                                            </button>
-                                            <button onclick="copyShareText()"
-                                                class="w-full flex items-center gap-3 p-3 bg-gray-500 hover:bg-gray-600 text-white rounded-xl transition-all">
-                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2">
-                                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                                                </svg>
-                                                复制文本
-                                            </button>
-                                        </div>
-                                        <button onclick="closeShareModal()"
-                                            class="w-full mt-4 p-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl transition-all">
-                                            取消
-                                        </button>
-                                        </div>
-                                        `;
-
-            document.body.appendChild(shareModal);
-
-            // 分享函数
-            window.shareToWeChat = function () {
-                // 微信分享逻辑（实际项目中需要接入微信SDK）
-                showToast('请在微信中打开此页面进行分享');
-                closeShareModal();
-            };
-
-            window.shareToWeibo = function () {
-                const weiboUrl =
-                    `https://service.weibo.com/share/share.php?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
-                window.open(weiboUrl, '_blank');
-                closeShareModal();
-            };
-
-            window.shareToQQ = function () {
-                const qqUrl =
-                    `https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(shareText)}`;
-                window.open(qqUrl, '_blank');
-                closeShareModal();
-            };
-
-            window.copyShareText = function () {
-                navigator.clipboard.writeText(shareText + ' ' + shareUrl).then(() => {
-                    showToast('分享文本已复制到剪贴板！');
-                }).catch(() => {
-                    showToast('复制失败，请手动复制');
-                });
-                closeShareModal();
-            };
-
-            window.closeShareModal = function () {
-                document.body.removeChild(shareModal);
-                delete window.shareToWeChat;
-                delete window.shareToWeibo;
-                delete window.shareToQQ;
-                delete window.copyShareText;
-                delete window.closeShareModal;
-            };
-        }
-
-        // 截图功能
-        function takeScreenshot() {
-            // 使用 html2canvas 库进行截图（需要引入库）
-            // 这里提供一个简化版本的提示
-            showToast('截图功能需要额外的库支持，请在实际项目中引入 html2canvas');
+                if (navigator.share) {
+                    navigator.share({
+                        title: '幸运一滴游戏',
+                        text: shareText,
+                        url: window.location.href
+                    });
+                } else {
+                    // 复制到剪贴板
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        showToast('分享内容已复制到剪贴板！');
+                    });
+                }
+            }
         }
 
         // 显示提示消息
@@ -2268,45 +1276,47 @@
             setTimeout(() => {
                 toast.style.opacity = '0';
                 setTimeout(() => {
-                    if (document.body.contains(toast)) {
-                        document.body.removeChild(toast);
-                    }
+                    document.body.removeChild(toast);
                 }, 300);
             }, 2000);
         }
 
-        // 事件监听器
-        console.log('Setting up event listeners...');
-        console.log('Start button element:', elements.startBtn);
-        elements.startBtn.addEventListener('click', function () {
-            console.log('Start button clicked!');
-            startGame();
-        });
-        elements.retryBtn.addEventListener('click', resetGame);
-        elements.continueBtn.addEventListener('click', startNewChallenge);
-        elements.shareBtn.addEventListener('click', shareResult);
-        elements.screenshotBtn.addEventListener('click', takeScreenshot);
+        // 初始化游戏
+        function initGame() {
+            console.log('Initializing game...');
 
-        // 为目标瓶添加点击事件监听器（点击屏幕触发倒水）
-        elements.targetBottle.addEventListener('click', handleScreenClick);
-        // 也可以点击游戏区域的任意位置触发
-        elements.gameArea.addEventListener('click', handleScreenClick);
+            // 确保层级定位正确
+            elements.layer1.style.position = 'absolute';
+            elements.layer1.style.bottom = '0px';
+            elements.layer1.style.height = '40px';
+            elements.layer2.style.position = 'absolute';
+            elements.layer2.style.bottom = '40px';
+            elements.layer2.style.height = '40px';
 
-        // 初始化页面时隐藏所有未开始的层
-        function initializeLayerVisibility() {
-            // 隐藏第2层，只显示第1层
-            elements.layer2.classList.add('hidden');
-            elements.layer1.classList.remove('hidden');
+            // 随机化初始玩家瓶颜色
+            randomizePlayerColor();
+
+            // 更新按钮状态
+            updateStartButtonState();
+            updatePointsDisplay();
+
+            // 设置事件监听器
+            elements.startBtn.addEventListener('click', startGame);
+            elements.retryBtn.addEventListener('click', resetGame);
+            elements.continueBtn.addEventListener('click', startNewChallenge);
+            elements.shareBtn.addEventListener('click', shareResult);
+
+            // 为目标瓶和游戏区域添加点击事件
+            elements.targetBottle.addEventListener('click', handleScreenClick);
+            elements.gameArea.addEventListener('click', handleScreenClick);
+
+            console.log('Game initialized successfully');
         }
 
-        // 初始化
-        updatePointsDisplay();
-        updatePlayerColor();
-        initializeLayerVisibility();
-        updateLayerDisplay();
-        updateColorIndicator();
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initGame);
 
-
+        console.log('JavaScript loaded successfully');
     </script>
 </body>
 
